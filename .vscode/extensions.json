@@ -1,15 +1,31 @@
 {
   "recommendations": [
+    "batisteo.vscode-django",
+    "christian-kohler.path-intellisense",
+    "dbaeumer.vscode-eslint",
     "editorconfig.editorconfig",
     "esbenp.prettier-vscode",
     "foxundermoon.shell-format",
+    "github.remotehub",
+    "github.vscode-pull-request-github",
+    "kevinrose.vsc-python-indent",
+    "mikestead.dotenv",
     "ms-azuretools.vscode-docker",
     "ms-python.black-formatter",
+    "ms-python.debugpy",
+    "ms-python.flake8",
+    "ms-python.isort",
+    "ms-python.mypy-type-checker",
+    "ms-python.pylint",
     "ms-python.python",
+    "ms-toolsai.jupyter",
     "ms-vscode-remote.remote-containers",
+    "ms-vscode.live-server",
+    "ms-vsliveshare.vsliveshare",
     "redhat.vscode-yaml",
     "skellock.just",
     "tamasfe.even-better-toml",
-    "timonwong.shellcheck"
+    "timonwong.shellcheck",
+    "visualstudioexptteam.vscodeintellicode"
   ]
 }

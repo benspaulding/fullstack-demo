@@ -63,4 +63,5 @@ alias i := install
 
 # open project in VS Code
 @open:
+	open -ga Docker
 	code .
