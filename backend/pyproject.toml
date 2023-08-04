@@ -9,6 +9,9 @@ description = "Placeholder package for testing dev tooling."
 authors = [ "Ben Spaulding <ben@spaulding.im>" ]
 license = "BSD-3-Clause"
 readme = "ReadMe.md"
+classifiers = [
+	"Private :: Do Not Upload",
+]
 packages = [
 	{ include = "djapp", from = "src" },
 	{ include = "djproj", from = "src" },
