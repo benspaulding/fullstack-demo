@@ -18,9 +18,15 @@ ensure_just() {
 		brew bundle install
 }
 
+ensure_env() {
+	test -f .env ||
+		touch .env
+}
+
 main() {
 	ensure_brew
 	ensure_just
+	ensure_env
 	just install
 	echo >&2
 	echo "Setup Complete!" >&2

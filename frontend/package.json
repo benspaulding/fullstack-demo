@@ -1,5 +1,5 @@
 {
-  "name": "somejspkg",
+  "name": "some-jspkg",
   "version": "1.0.0-alpha.1",
   "description": "Placeholder package for testing dev tooling.",
   "main": "index.js",
@@ -9,7 +9,7 @@
   "keywords": [
     "placeholder"
   ],
-  "private": false,
+  "private": true,
   "author": "Ben Spaulding <ben@spaulding.im>",
   "license": "BSD-3-Clause",
   "devDependencies": {

@@ -1,7 +1,9 @@
 !.vscode/
 *.map
 *.pyc
+.dockerignore
 .env
+.git/
 .venv/
 /Brewfile
 /setup

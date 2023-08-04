@@ -3,8 +3,8 @@
 {
 	"name": "Fullstack Project",
 	"dockerComposeFile": "docker-compose.yml",
-	"service": "app",
-	"workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+	"service": "django-server",
+	"workspaceFolder": "/app",
 
 	"features": {
 		"ghcr.io/devcontainers/features/node": {
