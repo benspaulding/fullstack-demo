@@ -1,0 +1,40 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 2
+indent_style = tab
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.md]
+indent_size = 2
+indent_style = space
+trim_trailing_whitespace = false
+
+[*.{py,pyi}]
+indent_size = 4
+indent_style = space
+
+[*.rst]
+indent_size = 4
+indent_style = space
+
+[*.{yml,yaml}]
+indent_size = 2
+indent_style = space
+
+[**/.{devcontainer,vscode}/**/*.json]
+indent_size = 2
+indent_style = space
+
+[{,.}[jJ]ustfile]
+indent_style = tab
+
+[[mM]akefile]
+indent_style = tab
+
+[package*.json]
+indent_size = 2
+indent_style = space

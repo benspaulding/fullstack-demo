@@ -1,0 +1,9 @@
+!.vscode/
+*.map
+*.pyc
+.env
+.venv/
+build/
+dist/
+node_modules/
+sdist/

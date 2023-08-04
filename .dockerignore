@@ -1,0 +1,11 @@
+!.vscode/
+*.map
+*.pyc
+.env
+.venv/
+/Brewfile
+/setup
+build/
+dist/
+node_modules/
+sdist/

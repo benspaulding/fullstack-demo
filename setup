@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+export HOMEBREW_BUNDLE_NO_LOCK=1
+export HOMEBREW_NO_INSECURE_REDIRECT=1
+
+test_exec() {
+	test -x "$(command -v "$@")"
+}
+
+ensure_brew() {
+	test_exec brew ||
+		bash -c "$(NONINTERACTIVE=1 curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	# [TODO] Ensure `brew` is available on $PATH
+}
+
+ensure_just() {
+	test_exec just ||
+		brew bundle install
+}
+
+main() {
+	ensure_brew
+	ensure_just
+	just install
+	echo >&2
+	echo "Setup Complete!" >&2
+	echo "In the future run 'just install' directly." >&2
+}
+
+main "$@"
