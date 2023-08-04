@@ -10,7 +10,10 @@ authors = [ "Ben Spaulding <ben@spaulding.im>" ]
 license = "BSD-3-Clause"
 readme = "ReadMe.md"
 packages = [
-	{ include = "somepypkg", from = "src" },
+	{ include = "djapp", from = "src" },
+	{ include = "djproj", from = "src" },
+	{ include = "pymod.py", from = "src" },
+	{ include = "pypkg", from = "src" },
 ]
 
 [tool.poetry.dependencies]
