@@ -5,7 +5,7 @@
 .env
 .git/
 .venv/
-/Brewfile
+/*file
 /setup
 build/
 dist/

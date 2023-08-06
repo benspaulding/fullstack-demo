@@ -9,14 +9,13 @@ x-django:
   build:
     context: ..
     dockerfile: .devcontainer/Dockerfile
+    target: dev
   env_file:
     - ../.env
     # - ../backend/.env
   depends_on:
     - postgres-db
     - redis-db
-  profiles:
-    - backend
   # entrypoint:
   #   - ${REPO_DIR:-/code}/backend/.venv/bin/python
   #   - -m
@@ -24,17 +23,14 @@ x-django:
   # command:
   #   - --help
 
-# x-celery:
-#   &__celery_service
-#   <<: *__django_service
-#   profiles:
-#     - backend
-#     - celery
-#   entrypoint:
-#     - ${REPO_DIR:-/code}/backend/.venv/bin/python
-#     - -m
-#     - celery
-#     - --app=${CELERY_APP:-djproj.celery:app}
+x-celery:
+  &__celery_service
+  <<: *__django_service
+  entrypoint:
+    - ${REPO_DIR:-/code}/backend/.venv/bin/python
+    - -m
+    - celery
+    - --app=${CELERY_APP:-djproj.celery:app}
 
 # x-next:
 #   &__next_service
@@ -46,8 +42,6 @@ x-django:
 #     # - ../frontend/.env
 #   depends_on:
 #     - django-server
-#   profiles:
-#     - frontend
 #   entrypoint:
 #     - yarn
 #   command:
@@ -65,9 +59,10 @@ services:
 
     volumes:
       - ..:/${REPO_DIR:-/code}:cached
+      # - ${REPO_DIR:-/code}/backend/.venv
 
-    # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
-    network_mode: service:postgres-db
+    # # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
+    # network_mode: service:postgres-db
 
     # Use "forwardPorts" in **devcontainer.json** to forward an app port locally.
     # (Adding the "ports" property to this file will not forward from a Codespace.)
@@ -76,9 +71,6 @@ services:
     ports:
       - published: ${DJANGO_PORT:-8000}
         target: 8000
-
-    # Uncomment the next line to use a non-root user for all processes.
-    # user: vscode
 
   # celery-worker:
   #   <<: *__celery_service
@@ -98,6 +90,11 @@ services:
   #   command:
   #     - run
   #     - start
+  #   volumes:
+  #     - .:${REPO_DIR:-/code}:cached
+  #     - ${REPO_DIR:-/code}/frontend/node_modules
+  #     # - ${REPO_DIR:-/code}/frontend/packages/app/node_modules
+  #     # - ${REPO_DIR:-/code}/frontend/packages/backend/node_modules
 
   postgres-db:
     image: postgres:latest

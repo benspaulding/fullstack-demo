@@ -24,9 +24,29 @@ python = "^3.11"
 Django = "^4.2.4"
 celery = { extras = [ "redis" ], version = "^5.3.1" }
 dj-database-url = "^2.0.0"
+psycopg = "^3.1.10"
 pytz = "^2023.3"
 
 [tool.poetry.group.dev.dependencies]
+black = "^23.7.0"
+debugpy = "^1.6.7"
 django-debug-toolbar = "^4.1.0"
+flower = "^2.0.0"
+ipykernel = "^6.25.0"
 ipython = "^8.14.0"
+isort = "^5.12.0"
+mypy = "^1.4.1"
 pytest = "^7.4.0"
+
+[tool.poetry.scripts]
+djproj = "djproj.__main__:main"
+# djproj = { reference = "djproj.__main__:main", type = "console" }
+
+# [tool.poetry.scripts.djproj]
+# reference = "djproj:__main__.main"
+# type = "console"
+
+# [tool.poetry.scripts.test]
+# reference = "djproj.__main__:main"
+# type = "console"
+# extras = [ "test" ]

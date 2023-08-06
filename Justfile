@@ -65,3 +65,16 @@ alias i := install
 @open:
 	open -ga Docker
 	code .
+
+
+
+# https://docs.celeryq.dev/en/latest/userguide/monitoring.html#celery-events-curses-monitor
+# celery -A dproj control enable_events
+# celery -A djproj events
+
+# https://docs.celeryq.dev/en/latest/userguide/monitoring.html#commands
+# celery shell
+# celery purge
+
+# https://docs.celeryq.dev/en/latest/userguide/monitoring.html#flower-real-time-celery-web-monitor
+# celery -A proj flower --port=5555
