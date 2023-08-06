@@ -72,18 +72,34 @@ services:
       - published: ${DJANGO_PORT:-8000}
         target: 8000
 
-  # celery-worker:
-  #   <<: *__celery_service
-  #   command:
-  #     - worker
-  #     - --concurrency=${CELERY_WORKER_CONCURRENCY:-1}
-  #     - --queues=${CELERY_WORKER_QUEUES:-general,schedule}
+  celery-worker:
+    <<: *__celery_service
+    command:
+      - worker
+      - --events
+      - --concurrency=${CELERY_WORKER_CONCURRENCY:-1}
+      - --queues=${CELERY_WORKER_QUEUES:-general,schedule}
 
-  # celery-beat:
-  #   <<: *__celery_service
-  #   command:
-  #     - beat
-  #     # - --scheduler=django_celery_beat.schedulers:DatabaseScheduler
+  celery-beat:
+    <<: *__celery_service
+    command:
+      - beat
+      - --events
+      # - --scheduler=django_celery_beat.schedulers:DatabaseScheduler
+
+  celery-flower:
+    <<: *__celery_service
+    command:
+      - flower
+      - --port=${FLOWER_PORT:-5555}
+
+    # Use "forwardPorts" in **devcontainer.json** to forward Flower locally.
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
+    expose:
+      - ${FLOWER_PORT:-5555}
+    ports:
+      - published: ${FLOWER_PORT:-5555}
+        target: 5555
 
   # next-server:
   #   <<: *__next_service
@@ -101,12 +117,8 @@ services:
     restart: unless-stopped
     volumes:
       - postgres-data:/var/lib/postgresql/data
-    environment:
-      # https://hub.docker.com/_/postgres/
-      POSTGRES_USER: postgres
-      POSTGRES_DB: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_HOST_AUTH_METHOD: trust
+    env_file:
+      - ../.env
 
     # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
     # (Adding the "ports" property to this file will not forward from a Codespace.)
@@ -121,6 +133,8 @@ services:
     restart: unless-stopped
     volumes:
       - redis-data:/data
+    env_file:
+      - ../.env
 
     # Add "forwardPorts": ["6379"] to **devcontainer.json** to forward Redis locally.
     # (Adding the "ports" property to this file will not forward from a Codespace.)

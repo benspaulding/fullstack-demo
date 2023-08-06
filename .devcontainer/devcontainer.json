@@ -1,71 +1,68 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/postgres
 {
-  "name": "Fullstack Project",
-  "dockerComposeFile": "compose.yaml",
-  "service": "django-server",
-  // "runServices": [
-  // 	// "django-server"
-  // 	// "next-server"
-  // ],
-  "workspaceFolder": "/code",
+	"name": "Fullstack Project",
+	"dockerComposeFile": "compose.yaml",
+	"service": "django-server",
+	// "runServices": [
+	// 	// "django-server"
+	// 	// "next-server"
+	// ],
+	"workspaceFolder": "/code",
 
-  // Use 'forwardPorts' to make a list of ports inside the container available locally.
-  // This can be used to network with other containers or the host.
-  "forwardPorts": [
-    3000, // frontend
-    5555, // flower
-    5432, // postgres
-    6006, // storybook
-    6379, // redis
-    8000 // backend
-  ],
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// This can be used to network with other containers or the host.
+	"forwardPorts": [
+		3000, // frontend
+		5555, // flower
+		5432, // postgres
+		6006, // storybook
+		6379, // redis
+		8000 // backend
+	],
 
-  // "features": {
-  // 	"ghcr.io/devcontainers/features/aws-cli": "latest",
-  // 	"ghcr.io/devcontainers/features/github-cli": "latest",
-  // 	"ghcr.io/devcontainers/features/node": {
-  // 		"nodeGypDependencies": true,
-  // 		"version": "lts"
-  // 	},
-  // 	// "ghcr.io/devcontainers/features/python": "3.11",
-  // 	"ghcr.io/devcontainers-contrib/features/poetry": "latest",
-  // 	// "ghcr.io/devcontainers-contrib/features/ts-node": "latest"
-  // 	"ghcr.io/lukewiwa/features/shellcheck": "stable",
-  // 	"ghcr.io/oleksis/devcontainer-features/python-launcher": "latest"
-  // },
+	// "features": {
+	// 	"ghcr.io/devcontainers/features/aws-cli": "latest",
+	// 	"ghcr.io/devcontainers/features/github-cli": "latest",
+	// 	"ghcr.io/devcontainers/features/node": "lts",
+	// 	// "ghcr.io/devcontainers/features/python": "3.11",
+	// 	"ghcr.io/devcontainers-contrib/features/poetry": "latest",
+	// 	// "ghcr.io/devcontainers-contrib/features/ts-node": "latest"
+	// 	"ghcr.io/lukewiwa/features/shellcheck": "stable",
+	// 	"ghcr.io/oleksis/devcontainer-features/python-launcher": "latest"
+	// },
 
-  "customizations": {
-    "codespaces": {},
-    "vscode": {
-      "extensions": [
-        "batisteo.vscode-django",
-        "christian-kohler.path-intellisense",
-        "dbaeumer.vscode-eslint",
-        "editorconfig.editorconfig",
-        "esbenp.prettier-vscode",
-        "foxundermoon.shell-format",
-        "kevinrose.vsc-python-indent",
-        "mikestead.dotenv",
-        "ms-azuretools.vscode-docker",
-        "ms-python.black-formatter",
-        "ms-python.debugpy",
-        "ms-python.flake8",
-        "ms-python.isort",
-        "ms-python.mypy-type-checker",
-        "ms-python.python",
-        "redhat.vscode-yaml",
-        "skellock.just",
-        "tamasfe.even-better-toml",
-        "timonwong.shellcheck",
-        "visualstudioexptteam.vscodeintellicode"
-      ],
-      "settings": {
-        // "python.defaultInterpreterPath": "/code/.venv/bin/python"
-      }
-    }
-  }
+	"customizations": {
+		"codespaces": {},
+		"vscode": {
+			"extensions": [
+				"batisteo.vscode-django",
+				"christian-kohler.path-intellisense",
+				"dbaeumer.vscode-eslint",
+				"editorconfig.editorconfig",
+				"esbenp.prettier-vscode",
+				"foxundermoon.shell-format",
+				"kevinrose.vsc-python-indent",
+				"mikestead.dotenv",
+				"ms-azuretools.vscode-docker",
+				"ms-python.black-formatter",
+				"ms-python.debugpy",
+				"ms-python.flake8",
+				"ms-python.isort",
+				"ms-python.mypy-type-checker",
+				"ms-python.python",
+				"redhat.vscode-yaml",
+				"skellock.just",
+				"tamasfe.even-better-toml",
+				"timonwong.shellcheck",
+				"visualstudioexptteam.vscodeintellicode"
+			],
+			"settings": {
+				// "python.defaultInterpreterPath": "/code/.venv/bin/python"
+			}
+		}
+	}
 
-  // Use 'postCreateCommand' to run commands after the container is created.
-  // "postCreateCommand": "poetry install"
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "poetry install"
 }

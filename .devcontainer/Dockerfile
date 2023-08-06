@@ -1,38 +1,37 @@
 ARG PYTHON_IMG="python:3.11-bullseye"
-# ARG PYTHON_IMG="mcr.microsoft.com/devcontainers/python:3.11-bullseye"
-# https://mcr.microsoft.com/en-us/product/devcontainers/python/about
-
-####
-### Python Images
-####
 
 ### Python Base Image
 FROM ${PYTHON_IMG} as base
 LABEL com.ourtilt.lang="python"
 LABEL com.ourtilt.stack="backend"
-LABEL com.ourtilt.stage="base"
-
-ENV DOCKER=1
-
-ARG REPO_DIR
-ENV REPO_DIR="${REPO_DIR:-/code}"
-# ENV VENV_DIR="${REPO_DIR}/.venv"
-ARG VENV_DIR
-ENV VENV_DIR="${VENV_DIR}/venv"
-
-ENV LANG="C.UTF-8"
-ENV PATH="${VENV_DIR}/bin:${PATH}"
-# ENV PYTHONPATH="${REPO_DIR}/backend:${PYTHONPATH}"
-ENV PYTHONUNBUFFERED="1"
+LABEL com.ourtilt.step="base"
 
 SHELL [ "/bin/bash", "+o", "errexit", "+o", "nounset", "+o", "pipefail", "-c" ]
 
 ARG DEBIAN_FRONTEND="noninteractive"
 
+ARG REPO_DIR
+ENV REPO_DIR="${REPO_DIR:-/code}"
+
+ARG VENV_DIR
+ENV VENV_DIR="${VENV_DIR:-/venv}"
+
+ENV DOCKER="1"
+ENV LANG="C.UTF-8"
+ENV PATH="${VENV_DIR}/bin:${PATH}"
+ENV PYTHONUNBUFFERED="1"
+
+ENV PIP_LOG="${VENV_DIR}/log/pip.log"
+ENV PIP_SRC="${VENV_DIR}/src"
+
+ENV VIRTUAL_ENV="${VENV_DIR}"
+ENV VIRTUAL_ENV_DISABLE_PROMPT="1"
+ENV POETRY_VIRTUALENVS_IN_PROJECT="false"
+
 USER root
 
-RUN groupadd --gid 1024 tilt \
-	&& useradd --uid 1024 --gid tilt --shell /bin/bash --create-home tilt
+RUN groupadd --gid 1024 app \
+	&& useradd --uid 1024 --gid app --shell /bin/bash --create-home app
 
 RUN mkdir "${REPO_DIR}" && chown -R 1024:1024 "${REPO_DIR}"
 RUN mkdir "${VENV_DIR}" && chown -R 1024:1024 "${VENV_DIR}"
@@ -51,9 +50,8 @@ RUN apt-get update && apt-get install -yqq --no-install-recommends \
 	tzdata \
 	&& rm -rf /var/lib/apt/lists/*
 
-USER tilt
+USER app
 WORKDIR "${REPO_DIR}"
-RUN mkdir "${REPO_DIR}/backend"
 
 # ENTRYPOINT [ "docker-entrypoint.sh" ]
 CMD [ "${VENV_DIR}/bin/python" ]
@@ -62,18 +60,14 @@ CMD [ "${VENV_DIR}/bin/python" ]
 
 ### Python Build Image
 FROM base as build
-LABEL com.ourtilt.stage="build"
+LABEL com.ourtilt.step="build"
 
 SHELL [ "/bin/bash", "+o", "errexit", "+o", "nounset", "+o", "pipefail", "-c" ]
 
 ARG DEBIAN_FRONTEND="noninteractive"
-ARG PIP_NO_INPUT="1"
-ARG VIRTUALENV_VERSION="20.13.0"
 
-ENV VIRTUALENV_NO_PERIODIC_UPDATE="1"
-ENV VIRTUALENV_PIP="23.2.1"
-ENV VIRTUALENV_SETUPTOOLS="60.6.0"
-ENV VIRTUALENV_WHEEL="0.37.1"
+ARG POETRY_VERSION
+ENV POETRY_VERSION="1.5.1"
 
 ARG PYTHONWARNINGS
 ENV PYTHONWARNINGS=${PYTHONWARNINGS:-"once"}
@@ -89,57 +83,62 @@ RUN apt-get update && apt-get install -yqq --no-install-recommends \
 	&& rm -rf /var/lib/apt/lists/*
 
 RUN --mount=type=cache,id=root,target=/root/.cache \
-	python -m pip install --upgrade "virtualenv==${VIRTUALENV_VERSION}"
+	python -m pip install --no-input --upgrade "poetry==${POETRY_VERSION}"
 
-USER tilt
-WORKDIR "${REPO_DIR}/backend"
+RUN --mount=type=cache,id=root,target=/root/.cache \
+	python -m venv --upgrade-deps "${VENV_DIR}" && . "${VENV_DIR}/bin/activate"
 
-RUN --mount=type=cache,id=tilt,uid=1024,gid=1024,target=/home/tilt/.cache \
-	python -m virtualenv "${VENV_DIR}" && . "${VENV_DIR}/bin/activate"
+RUN chown -R 1024:1024 "${VENV_DIR}"
 
-ENV PIP_LOG="${VENV_DIR}/log/pip.log"
-ENV PIP_SRC="${VENV_DIR}/src"
-ENV PIP_PREFER_BINARY="1"
+USER app
+WORKDIR "${REPO_DIR}"
 
-ARG PYTHON_REQS="backend/requirements.txt"
-COPY --chown=1024:1024 "${PYTHON_REQS}" "${PYTHON_REQS}"
-RUN --mount=type=cache,id=tilt,uid=1024,gid=1024,target=/home/tilt/.cache \
-	python -m pip install -r "${PYTHON_REQS}"
+ARG PYPROJ_TOML="backend/pyproject.toml"
+COPY --chown=1024:1024 "${PYPROJ_TOML}" "${PYPROJ_TOML}"
+RUN --mount=type=cache,id=app,uid=1024,gid=1024,target=/home/app/.cache \
+	poetry install \
+	--directory "${REPO_DIR}/backend" \
+	--no-directory \
+	--no-interaction \
+	--no-root \
+	--only main
 ##/ Python Build Image
 
 
 ### Python Prod Image
 FROM base as prod
 LABEL com.ourtilt.env="production"
-LABEL com.ourtilt.stage="built"
+LABEL com.ourtilt.step="built"
 
 SHELL [ "/bin/bash", "+o", "errexit", "+o", "nounset", "+o", "pipefail", "-c" ]
-
-ARG DEBIAN_FRONTEND="noninteractive"
 
 ARG PYTHONWARNINGS
 ENV PYTHONWARNINGS=${PYTHONWARNINGS:-"default"}
 
-USER tilt
+USER app
 WORKDIR "${REPO_DIR}/backend"
 
-COPY --chown=1024:1024 . "${REPO_DIR}/backend/"
-COPY --chown=1024:1024 --from=build "${REPO_DIR}/backend" "${REPO_DIR}/backend/"
+COPY --chown=1024:1024 ./backend "${REPO_DIR}/backend/"
 COPY --chown=1024:1024 --from=build "${VENV_DIR}" "${VENV_DIR}/"
+
+RUN --mount=type=cache,id=app,uid=1024,gid=1024,target=/home/app/.cache \
+	poetry install \
+	--directory "${REPO_DIR}/backend" \
+	--no-interaction \
+	--only-root
 ##/ Python Prod Image
 
 
 ### Python Dev Image
 FROM build as dev
 LABEL com.ourtilt.env="development"
-LABEL com.ourtilt.stage="built"
-
-SHELL [ "/bin/bash", "+o", "errexit", "+o", "nounset", "+o", "pipefail", "-c" ]
+LABEL com.ourtilt.step="built"
 
 ARG DEBIAN_FRONTEND="noninteractive"
-ARG PIP_NO_INPUT="1"
 
-ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONDONTWRITEBYTECODE="1"
+
+SHELL [ "/bin/bash", "+o", "errexit", "+o", "nounset", "+o", "pipefail", "-c" ]
 
 USER root
 
@@ -163,25 +162,23 @@ RUN apt-get update && apt-get install -yqq --no-install-recommends \
 	zsh \
 	&& rm -rf /var/lib/apt/lists/*
 
-RUN usermod -aG sudo tilt \
-	&& echo "tilt ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/tilt
+RUN usermod -aG sudo app \
+	&& echo "app ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/app
 
-USER tilt
+USER app
 WORKDIR "${REPO_DIR}/backend"
 
-ARG PYTHON_REQS_DEV="backend/requirements-dev.txt"
-COPY --chown=1024:1024 "${PYTHON_REQS_DEV}" "${PYTHON_REQS_DEV}"
-RUN --mount=type=cache,id=tilt,uid=1024,gid=1024,target=/home/tilt/.cache \
-	python -m pip install -r "${PYTHON_REQS_DEV}"
+COPY --chown=1024:1024 ./backend "${REPO_DIR}/backend/"
+
+RUN --mount=type=cache,id=app,uid=1024,gid=1024,target=/home/app/.cache \
+	poetry install \
+	--directory "${REPO_DIR}/backend" \
+	--no-interaction
 
 # ARG PRECOMMIT_CFG=".pre-commit-config.yaml"
 # COPY --chown=1024:1024 "${PRECOMMIT_CFG}" "${PRECOMMIT_CFG}"
-# RUN --mount=type=cache,id=tilt,uid=1024,gid=1024,target=/home/tilt/.cache \
+# RUN --mount=type=cache,id=app,uid=1024,gid=1024,target=/home/app/.cache \
 # 	git init \
 # 	&& python -m pre_commit install-hooks \
 # 	&& rm -rf .git
 ##/ Python Dev Image
-
-####
-##/ Python Images
-####
