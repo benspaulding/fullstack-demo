@@ -38,15 +38,6 @@ isort = "^5.12.0"
 mypy = "^1.4.1"
 pytest = "^7.4.0"
 
-[tool.poetry.scripts]
-djproj = "djproj.__main__:main"
-# djproj = { reference = "djproj.__main__:main", type = "console" }
-
-# [tool.poetry.scripts.djproj]
-# reference = "djproj:__main__.main"
-# type = "console"
-
-# [tool.poetry.scripts.test]
-# reference = "djproj.__main__:main"
-# type = "console"
-# extras = [ "test" ]
+[tool.poetry.scripts.djproj]
+reference = "djproj:__main__.main"
+type = "console"

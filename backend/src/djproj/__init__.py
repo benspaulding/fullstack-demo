@@ -5,5 +5,3 @@
 from .celery import app as celery_app
 
 __all__ = ("celery_app",)
-
-# print(f"{__file__=}, {__package__=}, {__name__=}")

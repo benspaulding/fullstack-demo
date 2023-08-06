@@ -79,7 +79,7 @@ RUN apt-get update && apt-get install -yqq --no-install-recommends \
 	git \
 	libmagic-dev \
 	libpq-dev \
-	python3.8-dev \
+	python3.11-dev \
 	&& rm -rf /var/lib/apt/lists/*
 
 RUN --mount=type=cache,id=root,target=/root/.cache \

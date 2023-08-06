@@ -2,8 +2,6 @@
 import sys
 from typing import NoReturn
 
-# print(f"{__file__=}, {__package__=}, {__name__=}")
-
 
 def doit(thing: object) -> None:
     print(thing)
