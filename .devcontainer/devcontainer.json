@@ -4,10 +4,7 @@
 	"name": "Fullstack Project",
 	"dockerComposeFile": "compose.yaml",
 	"service": "django-server",
-	// "runServices": [
-	// 	// "django-server"
-	// 	// "next-server"
-	// ],
+	"overrideCommand": true,
 	"workspaceFolder": "/code",
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
@@ -62,7 +59,4 @@
 			}
 		}
 	}
-
-	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "poetry install"
 }

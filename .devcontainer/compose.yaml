@@ -16,12 +16,12 @@ x-django:
   depends_on:
     - postgres-db
     - redis-db
-  # entrypoint:
-  #   - ${REPO_DIR:-/code}/backend/.venv/bin/python
-  #   - -m
-  #   - djproj
-  # command:
-  #   - --help
+  entrypoint:
+    - ${REPO_DIR:-/code}/backend/.venv/bin/python
+    - -m
+    - djproj
+  command:
+    - --help
 
 x-celery:
   &__celery_service
@@ -50,16 +50,12 @@ x-celery:
 services:
   django-server:
     <<: *__django_service
-    # command:
-    #   - runserver
-    #   - "${DJANGO_HOST:-0.0.0.0}:${DJANGO_PORT:-8000}"
-    # Overrides default command so things don't shut down after the process ends.
-    # entrypoint: []
-    command: sleep infinity
+    command:
+      - runserver
+      - "0.0.0.0:${DJANGO_PORT}"
 
     volumes:
       - ..:/${REPO_DIR:-/code}:cached
-      # - ${REPO_DIR:-/code}/backend/.venv
 
     # # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
     # network_mode: service:postgres-db
