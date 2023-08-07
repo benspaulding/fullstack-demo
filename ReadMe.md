@@ -20,3 +20,12 @@ recipies:
 just install
 just open
 ```
+
+## TODO
+
+- setup pre-commit
+- setup next
+- setup storybook
+- setup static file handling
+- setup frontend profile
+- setup backend profile

@@ -1,19 +1,32 @@
 {
+  "private": true,
   "name": "some-jspkg",
   "version": "1.0.0-alpha.1",
   "description": "Placeholder package for testing dev tooling.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "author": "Ben Spaulding <ben@spaulding.im>",
+  "license": "BSD-3-Clause",
   "keywords": [
     "placeholder"
   ],
-  "private": true,
-  "author": "Ben Spaulding <ben@spaulding.im>",
-  "license": "BSD-3-Clause",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev -H ${NEXT_HOST} -p ${NEXT_PORT}",
+    "build": "next build",
+    "start": "next start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "clsx": "^2.0.0",
+    "next": "latest",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
   "devDependencies": {
+    "@types/node": "20.4.8",
+    "@types/react": "18.2.18",
     "eslint": "^8.46.0",
-    "prettier": "^3.0.1"
+    "prettier": "^3.0.1",
+    "sass": "^1.64.2",
+    "typescript": "5.1.6"
   }
 }

@@ -2,7 +2,9 @@
 *.map
 *.pyc
 .env
+.env.*local
 .venv/
+__pycache__/
 build/
 dist/
 node_modules/
