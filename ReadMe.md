@@ -2,18 +2,24 @@
 
 ## Setup
 
-Run the `./setup` command the first time you work on the project:
+1. Clone this repository to your Mac:
 
-```sh
-./setup
-```
+   ```sh
+   git clone ssh://github.com/benspaulding/fullstack-demo
+   ```
 
-While the `./setup` script is safe to run again, there is no need to after it has been
-run once.
+2. Run the `./setup` command the first time you work on the project:
+
+   ```sh
+   cd fullstack-demo
+   ./setup
+   ```
+
+While the `./setup` script is safe to run again, there is no need or benefi or benefit.
 
 ## Development
 
-After the `./setup` script has been run once daily work can be started with just
+After the `./setup` script has been run once, daily work can be started with `just`
 recipies:
 
 ```sh
@@ -24,8 +30,6 @@ just open
 ## TODO
 
 - setup pre-commit
-- setup next
-- setup storybook
 - setup static file handling
 - setup frontend profile
 - setup backend profile

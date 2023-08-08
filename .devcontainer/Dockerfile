@@ -42,7 +42,7 @@ RUN mkdir "${VENV_DIR}" && chown -R 1024:1024 "${VENV_DIR}"
 # RUN printf -- '%b\n' ${PY_ENTRY} > /usr/local/bin/docker-entrypoint.sh \
 # 	&& chmod 755 /usr/local/bin/docker-entrypoint.sh
 
-RUN apt-get update && apt-get install -yqq --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
 	ca-certificates \
 	gettext \
 	postgresql-client-common \
@@ -74,12 +74,12 @@ ENV PYTHONWARNINGS=${PYTHONWARNINGS:-"once"}
 
 USER root
 
-RUN apt-get update && apt-get install -yqq --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
 	build-essential \
 	git \
 	libmagic-dev \
 	libpq-dev \
-	python3.11-dev \
+	libpython3-dev \
 	&& rm -rf /var/lib/apt/lists/*
 
 RUN --mount=type=cache,id=root,target=/root/.cache \
@@ -142,7 +142,7 @@ SHELL [ "/bin/bash", "+o", "errexit", "+o", "nounset", "+o", "pipefail", "-c" ]
 
 USER root
 
-RUN apt-get update && apt-get install -yqq --no-install-recommends \
+RUN apt-get update && apt-get install -y --no-install-recommends \
 	exa \
 	exuberant-ctags \
 	fd-find \

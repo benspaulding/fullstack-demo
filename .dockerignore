@@ -7,7 +7,9 @@
 .venv/
 /*file
 /setup
+__pycache__/
 build/
+celerybeat-schedule
 dist/
 node_modules/
 sdist/
