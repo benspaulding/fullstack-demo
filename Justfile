@@ -78,15 +78,13 @@ alias i := install
 # celery shell
 # celery purge
 
-# https://docs.celeryq.dev/en/latest/userguide/monitoring.html#flower-real-time-celery-web-monitor
-# celery -A djproj flower --port=${CELERY_PORT}
-
 # start compose stack
 up *services:
 	docker compose \
 		--file "${COMPOSE_FILE}" \
 		--project-name "${COMPOSE_PROJECT_NAME}" \
 		up \
+		--build \
 		--detach \
 		--remove-orphans \
 		--renew-anon-volumes \

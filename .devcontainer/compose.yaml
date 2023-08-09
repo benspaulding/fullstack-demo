@@ -23,6 +23,12 @@ x-django:
   volumes:
     - *__code_mount
     - type: volume
+      source: vscode-home-dir
+      target: /home/app/.vscode-server
+    - type: volume
+      source: vscode-root-dir
+      target: /vscode
+    - type: volume
       source: venv-dir
       target: ${VENV_DIR:-/venv}
   depends_on:
@@ -177,3 +183,5 @@ volumes:
   postgres-data:
   redis-data:
   venv-dir:
+  vscode-home-dir:
+  vscode-root-dir:

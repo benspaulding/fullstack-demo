@@ -1,10 +1,12 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/postgres
 {
-	"name": "Fullstack Project",
-	"dockerComposeFile": "compose.yaml",
+	"name": "Fullstack Demo",
+	"dockerComposeFile": ["compose.yaml"],
 	"service": "django-server",
 	"overrideCommand": true,
+	"remoteUser": "app",
+	"containerUser": "app",
 	"workspaceFolder": "/code",
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
@@ -17,6 +19,32 @@
 		6379, // redis
 		8000 // backend
 	],
+	"portsAttributes": {
+		"3000": {
+			"label": "next.js",
+			"onAutoForward": "silent"
+		},
+		"5555": {
+			"label": "Flower",
+			"onAutoForward": "silent"
+		},
+		"5432": {
+			"label": "PostgreSQL",
+			"onAutoForward": "silent"
+		},
+		"6006": {
+			"label": "Storybook",
+			"onAutoForward": "silent"
+		},
+		"6279": {
+			"label": "Redis",
+			"onAutoForward": "silent"
+		},
+		"8000": {
+			"label": "Django",
+			"onAutoForward": "silent"
+		}
+	},
 
 	// "features": {
 	// 	"ghcr.io/devcontainers/features/aws-cli": "latest",

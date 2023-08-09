@@ -30,7 +30,7 @@ main() {
 	just install
 	echo >&2
 	echo "Setup Complete!" >&2
-	echo "In the future run 'just install' directly." >&2
+	echo "In the future ignore this script and run 'just install' directly." >&2
 }
 
 main "$@"
