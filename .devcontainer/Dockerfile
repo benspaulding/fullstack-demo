@@ -5,6 +5,11 @@ FROM ${PYTHON_IMG} as base
 LABEL com.ourtilt.lang="python"
 LABEL com.ourtilt.stack="backend"
 LABEL com.ourtilt.step="base"
+LABEL devcontainer.metadata='[{ \
+	"remoteUser": "app", \
+	"containerUser": "app" \
+	"workspaceFolder": "/code" \
+	}]'
 
 SHELL [ "/bin/bash", "+o", "errexit", "+o", "nounset", "+o", "pipefail", "-c" ]
 
@@ -174,6 +179,10 @@ RUN --mount=type=cache,id=app,uid=1024,gid=1024,target=/home/app/.cache \
 	poetry install \
 	--directory "${REPO_DIR}/backend" \
 	--no-interaction
+
+# Create folders that will probably have mounted volumes; this will cause the mounted
+# volume to be owned by `app` instead of `root`.
+RUN mkdir /home/app/.cache /home/app/.vscode-server
 
 # ARG PRECOMMIT_CFG=".pre-commit-config.yaml"
 # COPY --chown=1024:1024 "${PRECOMMIT_CFG}" "${PRECOMMIT_CFG}"

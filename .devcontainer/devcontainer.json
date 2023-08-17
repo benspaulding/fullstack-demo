@@ -2,12 +2,20 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/postgres
 {
 	"name": "Fullstack Demo",
-	"dockerComposeFile": ["compose.yaml"],
-	"service": "django-server",
+	"image": "mcr.microsoft.com/devcontainers/python:3.11-bullseye",
 	"overrideCommand": true,
-	"remoteUser": "app",
-	"containerUser": "app",
 	"workspaceFolder": "/code",
+
+	"features": {
+		// "ghcr.io/devcontainers/features/aws-cli": "latest",
+		// "ghcr.io/devcontainers/features/github-cli": "latest",
+		"ghcr.io/devcontainers/features/node": "lts",
+		// "ghcr.io/devcontainers/features/python": "3.11",
+		"ghcr.io/devcontainers-contrib/features/poetry": "latest"
+		// "ghcr.io/devcontainers-contrib/features/ts-node": "latest"
+		// "ghcr.io/lukewiwa/features/shellcheck": "stable",
+		// "ghcr.io/oleksis/devcontainer-features/python-launcher": "latest"
+	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// This can be used to network with other containers or the host.
@@ -46,17 +54,6 @@
 		}
 	},
 
-	// "features": {
-	// 	"ghcr.io/devcontainers/features/aws-cli": "latest",
-	// 	"ghcr.io/devcontainers/features/github-cli": "latest",
-	// 	"ghcr.io/devcontainers/features/node": "lts",
-	// 	// "ghcr.io/devcontainers/features/python": "3.11",
-	// 	"ghcr.io/devcontainers-contrib/features/poetry": "latest",
-	// 	// "ghcr.io/devcontainers-contrib/features/ts-node": "latest"
-	// 	"ghcr.io/lukewiwa/features/shellcheck": "stable",
-	// 	"ghcr.io/oleksis/devcontainer-features/python-launcher": "latest"
-	// },
-
 	"customizations": {
 		"codespaces": {},
 		"vscode": {
@@ -83,7 +80,7 @@
 				"visualstudioexptteam.vscodeintellicode"
 			],
 			"settings": {
-				// "python.defaultInterpreterPath": "/code/.venv/bin/python"
+				"python.defaultInterpreterPath": "/code/.venv/bin/python"
 			}
 		}
 	}

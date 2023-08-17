@@ -1,0 +1,47 @@
+{
+  "name": "some-jspkg",
+  "version": "1.0.0-alpha.1",
+  "description": "Placeholder package for testing dev tooling.",
+  "author": "Ben Spaulding <ben@spaulding.im>",
+  "license": "BSD-3-Clause",
+  "keywords": [
+    "placeholder"
+  ],
+  "private": true,
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next dev -H ${NEXT_HOST:-0.0.0.0} -p ${NEXT_PORT:-3000}",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "sb:dev": "sb dev -h ${STORYBOOK_HOST:-0.0.0.0} -p ${STORYBOOK_PORT:-6006}",
+    "sb:build": "sb build"
+  },
+  "dependencies": {
+    "clsx": "^2.0.0",
+    "next": "latest",
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.22.10",
+    "@babel/preset-react": "^7.22.5",
+    "@babel/preset-typescript": "^7.22.5",
+    "@storybook/addon-essentials": "^7.2.1",
+    "@storybook/addon-interactions": "^7.2.1",
+    "@storybook/addon-links": "^7.2.1",
+    "@storybook/addon-onboarding": "^1.0.8",
+    "@storybook/blocks": "^7.2.1",
+    "@storybook/react": "^7.2.1",
+    "@storybook/react-webpack5": "^7.2.1",
+    "@storybook/testing-library": "^0.2.0",
+    "@types/node": "20.5.0",
+    "@types/react": "18.2.20",
+    "prettier": "^3.0.1",
+    "sass": "^1.64.2",
+    "storybook": "^7.2.1",
+    "typescript": "5.1.6"
+  }
+}

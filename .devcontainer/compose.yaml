@@ -13,6 +13,7 @@ x-code-mount:
 
 x-django:
   &__django_service
+  image:
   build:
     context: ..
     dockerfile: .devcontainer/backend/Dockerfile

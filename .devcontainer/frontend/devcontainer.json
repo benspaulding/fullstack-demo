@@ -3,8 +3,8 @@
 {
 	"name": "Fullstack Demo [Frontend]",
 	"dockerComposeFile": [
-		"../compose.common.yaml",
-		"compose.yaml" //
+		"../compose.procfile.yaml"
+		// "compose.yaml"
 	],
 	"service": "frontend",
 	"overrideCommand": true,

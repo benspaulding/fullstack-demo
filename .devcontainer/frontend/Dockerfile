@@ -14,7 +14,7 @@ ARG REPO_DIR
 ENV REPO_DIR="${REPO_DIR:-/code}"
 
 ARG NODE_DIR
-ENV NODE_DIR="${REPO_DIR}/node_modules"
+ENV NODE_DIR="${REPO_DIR}/frontend/node_modules"
 
 ENV DOCKER="1"
 ENV LANG="C.UTF-8"
@@ -23,7 +23,7 @@ ENV PATH="${NODE_DIR}/.bin:${PATH}"
 USER root
 
 RUN groupadd --gid 1024 app \
-	&& useradd --uid 1024 --gid app --shell /bin/bash --create-home app
+  && useradd --uid 1024 --gid app --shell /bin/bash --create-home app
 
 RUN mkdir "${REPO_DIR}" && chown -R 1024:1024 "${REPO_DIR}"
 
@@ -34,12 +34,12 @@ RUN mkdir "${REPO_DIR}" && chown -R 1024:1024 "${REPO_DIR}"
 # 	&& chmod 755 /usr/local/bin/docker-entrypoint.sh
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-	ca-certificates \
-	gettext \
-	postgresql-client-common \
-	redis-tools \
-	tzdata \
-	&& rm -rf /var/lib/apt/lists/*
+  ca-certificates \
+  gettext \
+  postgresql-client-common \
+  redis-tools \
+  tzdata \
+  && rm -rf /var/lib/apt/lists/*
 
 USER app
 WORKDIR "${REPO_DIR}"
@@ -60,9 +60,9 @@ ARG DEBIAN_FRONTEND="noninteractive"
 USER root
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-	build-essential \
-	git \
-	&& rm -rf /var/lib/apt/lists/*
+  build-essential \
+  git \
+  && rm -rf /var/lib/apt/lists/*
 
 USER app
 WORKDIR "${REPO_DIR}"
@@ -71,7 +71,7 @@ COPY --chown=1024:1024 "frontend/package*.json" "frontend/"
 
 WORKDIR "${REPO_DIR}/frontend"
 RUN --mount=type=cache,id=app,uid=1024,gid=1024,target=/home/app/.cache \
-	npm install --omit dev
+  npm install --omit dev
 ##/ Node Build Image
 
 
@@ -102,27 +102,27 @@ SHELL [ "/bin/bash", "+o", "errexit", "+o", "nounset", "+o", "pipefail", "-c" ]
 USER root
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-	exa \
-	exuberant-ctags \
-	fd-find \
-	fish \
-	fzf \
-	htop \
-	jq \
-	neovim \
-	rsync \
-	screen \
-	shellcheck \
-	sudo \
-	telnet \
-	tmux \
-	tree \
-	vim \
-	zsh \
-	&& rm -rf /var/lib/apt/lists/*
+  exa \
+  exuberant-ctags \
+  fd-find \
+  fish \
+  fzf \
+  htop \
+  jq \
+  neovim \
+  rsync \
+  screen \
+  shellcheck \
+  sudo \
+  telnet \
+  tmux \
+  tree \
+  vim \
+  zsh \
+  && rm -rf /var/lib/apt/lists/*
 
 RUN usermod -aG sudo app \
-	&& echo "app ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/app
+  && echo "app ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/app
 
 USER app
 WORKDIR "${REPO_DIR}/frontend"
@@ -130,7 +130,7 @@ WORKDIR "${REPO_DIR}/frontend"
 COPY --chown=1024:1024 ./frontend "${REPO_DIR}/frontend/"
 
 RUN --mount=type=cache,id=app,uid=1024,gid=1024,target=/home/app/.cache \
-	npm install
+  npm install
 
 # ARG PRECOMMIT_CFG=".pre-commit-config.yaml"
 # COPY --chown=1024:1024 "${PRECOMMIT_CFG}" "${PRECOMMIT_CFG}"
