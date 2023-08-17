@@ -14,12 +14,12 @@ x-code-mount:
 x-django:
   &__django_service
   build:
-    context: ..
+    context: ../..
     dockerfile: .devcontainer/backend/Dockerfile
     target: dev
   env_file:
-    - ../.env
-    # - ../backend/.env
+    - ../../.env
+    # - ../../backend/.env
   volumes:
     - *__code_mount
     - type: volume
@@ -52,12 +52,12 @@ x-celery:
 x-next:
   &__next_service
   build:
-    context: ..
+    context: ../..
     dockerfile: .devcontainer/frontend/Dockerfile
     target: dev
   env_file:
-    - ../.env
-    # - ../frontend/.env
+    - ../../.env
+    # - ../../frontend/.env
   volumes:
     - *__code_mount
     - type: volume
@@ -150,7 +150,7 @@ services:
     image: postgres:latest
     restart: unless-stopped
     env_file:
-      - ../.env
+      - ../../.env
     volumes:
       - type: volume
         source: postgres-data
@@ -166,7 +166,7 @@ services:
     image: redis:latest
     restart: unless-stopped
     env_file:
-      - ../.env
+      - ../../.env
     volumes:
       - type: volume
         source: redis-data

@@ -15,7 +15,7 @@
    ./setup
    ```
 
-While the `./setup` script is safe to run again, there is no need or benefi or benefit.
+While the `./setup` script is safe to run again, there is no need or benefit.
 
 ## Development
 
