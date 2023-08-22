@@ -11,11 +11,11 @@
   ],
   "scripts": {
     "dev": "next dev -H ${NEXT_HOST:-0.0.0.0} -p ${NEXT_PORT:-3000}",
+    "dev:sb": "sb dev -h ${STORYBOOK_HOST:-0.0.0.0} -p ${STORYBOOK_PORT:-6006}",
     "build": "next build",
-    "start": "next start",
+    "build:sb": "sb build",
     "lint": "next lint",
-    "sb:dev": "sb dev -h ${STORYBOOK_HOST:-0.0.0.0} -p ${STORYBOOK_PORT:-6006}",
-    "sb:build": "sb build"
+    "start": "next start"
   },
   "dependencies": {
     "@types/node": "20.5.0",

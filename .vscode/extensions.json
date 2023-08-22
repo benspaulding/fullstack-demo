@@ -1,4 +1,7 @@
 {
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, see: https://code.visualstudio.com/docs/editor/extension-marketplace#_workspace-recommended-extensions
   "recommendations": [
     "batisteo.vscode-django",
     "christian-kohler.path-intellisense",
@@ -27,5 +30,6 @@
     "tamasfe.even-better-toml",
     "timonwong.shellcheck",
     "visualstudioexptteam.vscodeintellicode"
-  ]
+  ],
+  "unwantedRecommendations": []
 }

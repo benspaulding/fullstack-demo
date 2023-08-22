@@ -2,12 +2,8 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/postgres
 {
 	"name": "Fullstack Demo [Backend]",
-	"dockerComposeFile": [
-		"../compose.procfile.yaml"
-		// "compose.yaml"
-	],
-	"service": "backend",
-	"overrideCommand": true,
+	"dockerComposeFile": ["../compose.yaml", "compose.yaml"],
+	"service": "django-dev",
 	"workspaceFolder": "/code",
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
@@ -37,7 +33,7 @@
 			"label": "Storybook",
 			"onAutoForward": "silent"
 		},
-		"6279": {
+		"6379": {
 			"label": "Redis",
 			"onAutoForward": "silent"
 		},

@@ -1,6 +1,8 @@
 ---
 version: "3.9"
 name: fullstack-demo
+include:
+  - path: compose.common.yaml
 
 # x-required:
 #   - "${REPO_DIR:?Path to repository root in the container}"
@@ -10,10 +12,19 @@ x-code-mount:
   type: bind
   source: ..
   target: ${REPO_DIR:-/code}
+x-vscode-home:
+  &__vscode_home
+  type: volume
+  source: vscode-home-dir
+  target: /home/app/.vscode-server
+x-vscode-root:
+  &__vscode_root
+  type: volume
+  source: vscode-root-dir
+  target: /vscode
 
 x-django:
   &__django_service
-  image:
   build:
     context: ..
     dockerfile: .devcontainer/backend/Dockerfile
@@ -23,12 +34,8 @@ x-django:
     # - ../backend/.env
   volumes:
     - *__code_mount
-    - type: volume
-      source: vscode-home-dir
-      target: /home/app/.vscode-server
-    - type: volume
-      source: vscode-root-dir
-      target: /vscode
+    - *__vscode_home
+    - *__vscode_root
   depends_on:
     - postgres-db
     - redis-db
@@ -43,7 +50,7 @@ x-celery:
   &__celery_service
   <<: *__django_service
   volumes_from:
-    - django-server
+    - django-dev
   entrypoint:
     - ${VENV_DIR:-/venv}/bin/python
     - -m
@@ -61,21 +68,17 @@ x-next:
     # - ../frontend/.env
   volumes:
     - *__code_mount
-    - type: volume
-      source: vscode-home-dir
-      target: /home/app/.vscode-server
-    - type: volume
-      source: vscode-root-dir
-      target: /vscode
+    - *__vscode_home
+    - *__vscode_root
   depends_on:
-    - django-server
+    - django-dev
   entrypoint:
     - npm
   command:
     - --help
 
 services:
-  django-server:
+  django-dev:
     <<: *__django_service
     command:
       - runserver
@@ -117,7 +120,7 @@ services:
       - published: ${FLOWER_PORT:-5555}
         target: 5555
 
-  next-server:
+  next-dev:
     <<: *__next_service
     command:
       - run
@@ -131,15 +134,15 @@ services:
       - published: ${NEXT_PORT:-3000}
         target: 3000
 
-  storybook-server:
+  storybook-dev:
     <<: *__next_service
     command:
       - run
-      - storybook
+      - dev:sb
       - -h ${STORYBOOK_HOST:-0.0.0.0}
       - -p ${STORYBOOK_PORT:-6006}
     volumes_from:
-      - next-server
+      - next-dev
 
     # Add "forwardPorts": ["6006"] to **devcontainer.json** to forward next.js locally.
     # (Adding the "ports" property to this file will not forward from a Codespace.)
@@ -147,40 +150,6 @@ services:
       - published: ${STORYBOOK_PORT:-6006}
         target: 6006
 
-  postgres-db:
-    image: postgres:latest
-    restart: unless-stopped
-    env_file:
-      - ../.env
-    volumes:
-      - type: volume
-        source: postgres-data
-        target: /var/lib/postgresql/data
-
-    # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
-    # (Adding the "ports" property to this file will not forward from a Codespace.)
-    ports:
-      - published: ${POSTGRES_PORT:-5432}
-        target: 5432
-
-  redis-db:
-    image: redis:latest
-    restart: unless-stopped
-    env_file:
-      - ../.env
-    volumes:
-      - type: volume
-        source: redis-data
-        target: /data
-
-    # Add "forwardPorts": ["6379"] to **devcontainer.json** to forward Redis locally.
-    # (Adding the "ports" property to this file will not forward from a Codespace.)
-    ports:
-      - published: ${REDIS_PORT:-6379}
-        target: 6379
-
 volumes:
-  postgres-data:
-  redis-data:
   vscode-home-dir:
   vscode-root-dir:

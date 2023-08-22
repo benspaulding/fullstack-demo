@@ -3,8 +3,7 @@
 {
 	"name": "Fullstack Demo",
 	"dockerComposeFile": ["compose.yaml"],
-	"service": "frontend",
-	"overrideCommand": true,
+	"service": "dev",
 	"workspaceFolder": "/code",
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
@@ -34,7 +33,7 @@
 			"label": "Storybook",
 			"onAutoForward": "silent"
 		},
-		"6279": {
+		"6379": {
 			"label": "Redis",
 			"onAutoForward": "silent"
 		},

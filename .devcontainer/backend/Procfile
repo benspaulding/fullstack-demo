@@ -1,7 +1,0 @@
-django-server: djproj runserver ${DJANGO_HOST}:${DJANGO_PORT}
-
-celery-worker: celery -A djproj.celery:app worker --events --concurrency=${CELERY_WORKER_CONCURRENCY:-1} --queues=${CELERY_WORKER_QUEUES:-general,schedule}
-
-celery-beat: celery -A djproj.celery:app beat
-
-celery-flower: celery -A djproj.celery:app flower --address=${FLOWER_HOST:-0.0.0.0} --port=${FLOWER_PORT:-5555}
