@@ -4,12 +4,10 @@
   // For more information, see: https://code.visualstudio.com/docs/editor/extension-marketplace#_workspace-recommended-extensions
   "recommendations": [
     "batisteo.vscode-django",
-    "christian-kohler.path-intellisense",
     "dbaeumer.vscode-eslint",
     "editorconfig.editorconfig",
     "esbenp.prettier-vscode",
     "foxundermoon.shell-format",
-    "github.remotehub",
     "github.vscode-pull-request-github",
     "kevinrose.vsc-python-indent",
     "mikestead.dotenv",
@@ -19,17 +17,11 @@
     "ms-python.flake8",
     "ms-python.isort",
     "ms-python.mypy-type-checker",
-    "ms-python.pylint",
     "ms-python.python",
-    "ms-toolsai.jupyter",
     "ms-vscode-remote.remote-containers",
-    "ms-vscode.live-server",
-    "ms-vsliveshare.vsliveshare",
-    "redhat.vscode-yaml",
     "skellock.just",
     "tamasfe.even-better-toml",
-    "timonwong.shellcheck",
-    "visualstudioexptteam.vscodeintellicode"
+    "timonwong.shellcheck"
   ],
   "unwantedRecommendations": []
 }

@@ -12,7 +12,6 @@
 		// "ghcr.io/devcontainers/features/python": "3.11",
 		"ghcr.io/devcontainers-contrib/features/poetry": "latest"
 		// "ghcr.io/devcontainers-contrib/features/ts-node": "latest"
-		// "ghcr.io/lukewiwa/features/shellcheck": {},
 		// "ghcr.io/oleksis/devcontainer-features/python-launcher": "latest"
 	},
 

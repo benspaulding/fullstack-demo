@@ -4,33 +4,17 @@ name: fullstack-demo
 include:
   - path: compose.common.yaml
 
-x-code-mount:
-  &__code_mount
-  type: bind
-  source: ../..
-  target: ${REPO_DIR:-/code}
-x-vscode-home:
-  &__vscode_home
-  type: volume
-  source: vscode-home-dir
-  target: /home/app/.vscode-server
-x-vscode-root:
-  &__vscode_root
-  type: volume
-  source: vscode-root-dir
-  target: /vscode
-
 services:
   dev:
     build:
-      context: ../..
-      dockerfile: .devcontainer/fullstack/Dockerfile
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
     env_file:
-      - ../../.env
+      - ../.env
     volumes:
-      - *__code_mount
-      - *__vscode_home
-      - *__vscode_root
+    - type: bind
+      source: ..
+      target: ${REPO_DIR:-/code}
     depends_on:
       - postgres-db
       - redis-db
@@ -55,7 +39,3 @@ services:
       # (Adding the "ports" property to this file will not forward from a Codespace.)
       - published: ${STORYBOOK_PORT:-6006}
         target: 6006
-
-volumes:
-  vscode-home-dir:
-  vscode-root-dir:

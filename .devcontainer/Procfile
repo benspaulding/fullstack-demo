@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 be: djproj runserver "${DJANGO_HOST}:${DJANGO_PORT}"
 
 cw: celery -A djproj.celery:app worker --events --concurrency="${CELERY_WORKER_CONCURRENCY:-1}" --queues="${CELERY_WORKER_QUEUES:-general,schedule}"
@@ -6,6 +8,6 @@ cb: celery -A djproj.celery:app beat
 
 cf: celery -A djproj.celery:app flower --address="${FLOWER_HOST:-0.0.0.0}" --port="${FLOWER_PORT:-5555}"
 
-fe: npm --prefix /code/frontend run dev
+fe: npm --prefix /code/frontend run dev --
 
-sb: npm --prefix /code/frontend run dev:sb
+sb: npm --prefix /code/frontend run dev:sb -- --no-open
