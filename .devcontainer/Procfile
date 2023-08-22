@@ -1,11 +1,11 @@
-django-server: djproj runserver ${DJANGO_HOST}:${DJANGO_PORT}
+be: djproj runserver "${DJANGO_HOST}:${DJANGO_PORT}"
 
-celery-worker: celery -A djproj.celery:app worker --events --concurrency=${CELERY_WORKER_CONCURRENCY:-1} --queues=${CELERY_WORKER_QUEUES:-general,schedule}
+cw: celery -A djproj.celery:app worker --events --concurrency="${CELERY_WORKER_CONCURRENCY:-1}" --queues="${CELERY_WORKER_QUEUES:-general,schedule}"
 
-celery-beat: celery -A djproj.celery:app beat
+cb: celery -A djproj.celery:app beat
 
-celery-flower: celery -A djproj.celery:app flower --address=${FLOWER_HOST:-0.0.0.0} --port=${FLOWER_PORT:-5555}
+cf: celery -A djproj.celery:app flower --address="${FLOWER_HOST:-0.0.0.0}" --port="${FLOWER_PORT:-5555}"
 
-next-server: npm run dev -H ${NEXT_HOST:-0.0.0.0} -p ${NEXT_PORT:-3000}
+fe: npm --prefix /code/frontend run dev
 
-storybook-server: npm run storybook -h ${STORYBOOK_HOST:-0.0.0.0} -p ${STORYBOOK_PORT:-6006}
+sb: npm --prefix /code/frontend run dev:sb

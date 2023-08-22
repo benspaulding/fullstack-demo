@@ -4,6 +4,9 @@ name: fullstack-demo-procfile
 include:
   - path: compose.common.yaml
 
+# x-required:
+#   - "${REPO_DIR:?Path to repository root in the container}"
+
 x-code-mount:
   &__code_mount
   type: bind
@@ -21,12 +24,14 @@ x-vscode-root:
   target: /vscode
 
 services:
-  dev:
+  backend:
     build:
-      context: ../..
-      dockerfile: .devcontainer/fullstack/Dockerfile
+      context: ..
+      dockerfile: .devcontainer/backend/Dockerfile
+      target: dev
     env_file:
-      - ../../.env
+      - ../.env
+      # - ../backend/.env
     volumes:
       - *__code_mount
       - *__vscode_home
@@ -35,8 +40,14 @@ services:
       - postgres-db
       - redis-db
     command:
-      - sleep
-      - infinity
+      - honcho
+      - -f
+      - ${REPO_DIR:-/code}/.devcontainer/backend.procfile/Procfile
+      - start
+      - django-dev
+      - celery-worker
+      - celery-beat
+      - celery-flower
     ports:
       # Add "forwardPorts": ["8000"] to **devcontainer.json** to forward Django locally.
       # (Adding the "ports" property to this file will not forward from a Codespace.)
@@ -46,6 +57,32 @@ services:
       # (Adding the "ports" property to this file will not forward from a Codespace.)
       - published: ${FLOWER_PORT:-5555}
         target: 5555
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: .devcontainer/frontend/Dockerfile
+      target: dev
+    env_file:
+      - ../.env
+      # - ../frontend/.env
+    volumes:
+      - *__code_mount
+      - *__vscode_home
+      - *__vscode_root
+    depends_on:
+      - backend
+    command:
+      - npm
+      - start
+      - dev
+      # - honcho
+      # - -f
+      # - ${REPO_DIR:-/code}/.devcontainer/frontend.procfile/Procfile
+      # - start
+      # - next-dev
+      # - storybook-dev
+    ports:
       # Add "forwardPorts": ["3000"] to **devcontainer.json** to forward next.js locally.
       # (Adding the "ports" property to this file will not forward from a Codespace.)
       - published: ${NEXT_PORT:-3000}

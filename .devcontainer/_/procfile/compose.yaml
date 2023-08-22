@@ -1,13 +1,13 @@
 ---
 version: "3.9"
-name: fullstack-demo
+name: fullstack-demo-procfile
 include:
-  - path: compose.common.yaml
+  - path: ../compose.common.yaml
 
 x-code-mount:
   &__code_mount
   type: bind
-  source: ../..
+  source: ..
   target: ${REPO_DIR:-/code}
 x-vscode-home:
   &__vscode_home
@@ -21,12 +21,13 @@ x-vscode-root:
   target: /vscode
 
 services:
-  dev:
+  backend:
     build:
-      context: ../..
-      dockerfile: .devcontainer/fullstack/Dockerfile
+      context: ..
+      dockerfile: .devcontainer/backend/Dockerfile
+      target: dev
     env_file:
-      - ../../.env
+      - ../.env
     volumes:
       - *__code_mount
       - *__vscode_home
@@ -37,7 +38,6 @@ services:
     command:
       - sleep
       - infinity
-
     ports:
       # Add "forwardPorts": ["8000"] to **devcontainer.json** to forward Django locally.
       # (Adding the "ports" property to this file will not forward from a Codespace.)

@@ -1,19 +1,10 @@
 {
 	// Use IntelliSense to learn about possible attributes.
 	// Hover to view descriptions of existing attributes.
-	// For more information, visit: https://code.visualstudio.com/docs/getstarted/settings
 	"folders": [
 		{
 			"name": "fullstack-demo",
 			"path": "."
-			// },
-			// {
-			// 	"name": "Backend",
-			// 	"path": "./backend"
-			// },
-			// {
-			// 	"name": "Frontend",
-			// 	"path": "./frontend"
 		}
 	],
 	"extensions": {},
@@ -21,8 +12,6 @@
 		"files.exclude": {
 			"**/.DS_Store": true,
 			"**/.git": false
-			// "**/backend": true,
-			// "**/frontend": true
 		}
 	},
 	"launch": {

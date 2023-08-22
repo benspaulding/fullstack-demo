@@ -2,9 +2,18 @@
 // README at: https://github.com/devcontainers/templates/tree/main/src/postgres
 {
 	"name": "Fullstack Demo [Backend]",
-	"dockerComposeFile": ["../compose.yaml", "compose.yaml"],
+	"dockerComposeFile": ["../compose.discrete.yaml", "compose.yaml"],
 	"service": "django-dev",
 	"workspaceFolder": "/code",
+
+	//
+	"features": {
+		"ghcr.io/devcontainers/features/aws-cli": {},
+		"ghcr.io/devcontainers/features/github-cli": {},
+		"ghcr.io/guiyomh/features/just": {},
+		"ghcr.io/lukewiwa/features/shellcheck": {},
+		"ghcr.io/oleksis/devcontainer-features/python-launcher": "latest"
+	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// This can be used to network with other containers or the host.

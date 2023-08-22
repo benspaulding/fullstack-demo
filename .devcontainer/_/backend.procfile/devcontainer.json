@@ -1,17 +1,21 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/postgres
 {
-	"name": "Fullstack Demo [Frontend]",
-	"dockerComposeFile": ["../compose.discrete.yaml", "compose.yaml"],
-	"service": "next-dev",
+	"name": "Fullstack Demo [Backend] w/ Procfile",
+	"dockerComposeFile": ["../compose.procfile.yaml", "compose.yaml"],
+	"service": "backend",
 	"workspaceFolder": "/code",
 
 	//
 	"features": {
 		"ghcr.io/devcontainers/features/aws-cli": {},
 		"ghcr.io/devcontainers/features/github-cli": {},
+		"ghcr.io/devcontainers/features/node": "lts",
 		"ghcr.io/guiyomh/features/just": {},
 		"ghcr.io/lukewiwa/features/shellcheck": {}
+	},
+	"postStartCommand": {
+		"dev": "pipx install honcho"
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

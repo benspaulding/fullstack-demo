@@ -26,7 +26,7 @@ f := "false"
 export HOMEBREW_BUNDLE_NO_LOCK := "1"
 export HOMEBREW_NO_INSECURE_REDIRECT := "1"
 
-export COMPOSE_FILE := env_var_or_default("COMPOSE_FILE", ".devcontainer/compose.yaml")
+export COMPOSE_FILE := env_var_or_default("COMPOSE_FILE", ".devcontainer/compose.discrete.yaml")
 export COMPOSE_PROJECT_NAME := env_var_or_default("COMPOSE_PROJECT_NAME", "fullstack-demo")
 
 

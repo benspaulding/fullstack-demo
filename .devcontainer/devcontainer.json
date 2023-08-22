@@ -1,17 +1,24 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/postgres
 {
-	"name": "Fullstack Demo [Frontend]",
-	"dockerComposeFile": ["../compose.discrete.yaml", "compose.yaml"],
-	"service": "next-dev",
+	"name": "Fullstack Demo",
+	"dockerComposeFile": ["compose.procfile.yaml"],
+	"service": "dev",
 	"workspaceFolder": "/code",
 
 	//
 	"features": {
 		"ghcr.io/devcontainers/features/aws-cli": {},
 		"ghcr.io/devcontainers/features/github-cli": {},
+		"ghcr.io/devcontainers/features/node": "lts",
+		"ghcr.io/devcontainers-contrib/features/poetry": {},
+		// "ghcr.io/devcontainers-contrib/features/ts-node": "latest",
 		"ghcr.io/guiyomh/features/just": {},
-		"ghcr.io/lukewiwa/features/shellcheck": {}
+		"ghcr.io/lukewiwa/features/shellcheck": {},
+		"ghcr.io/oleksis/devcontainer-features/python-launcher": "latest"
+	},
+	"postStartCommand": {
+		"dev": "pipx install honcho && poetry -C backend install && npm --prefix frontend ci"
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
@@ -76,9 +83,7 @@
 				"timonwong.shellcheck",
 				"visualstudioexptteam.vscodeintellicode"
 			],
-			"settings": {
-				"python.defaultInterpreterPath": "/code/.venv/bin/python"
-			}
+			"settings": {}
 		}
 	}
 }

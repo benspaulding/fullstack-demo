@@ -1,17 +1,19 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/postgres
 {
-	"name": "Fullstack Demo [Frontend]",
-	"dockerComposeFile": ["../compose.discrete.yaml", "compose.yaml"],
-	"service": "next-dev",
-	"workspaceFolder": "/code",
+	"name": "Fullstack Demo [Pure Dev]",
+	"image": "mcr.microsoft.com/devcontainers/python:3.11-bullseye",
+	"postAttachCommand": "poetry -C backend install && npm --prefix frontend install",
 
-	//
 	"features": {
-		"ghcr.io/devcontainers/features/aws-cli": {},
-		"ghcr.io/devcontainers/features/github-cli": {},
-		"ghcr.io/guiyomh/features/just": {},
-		"ghcr.io/lukewiwa/features/shellcheck": {}
+		// "ghcr.io/devcontainers/features/aws-cli": "latest",
+		// "ghcr.io/devcontainers/features/github-cli": "latest",
+		"ghcr.io/devcontainers/features/node": "lts",
+		// "ghcr.io/devcontainers/features/python": "3.11",
+		"ghcr.io/devcontainers-contrib/features/poetry": "latest"
+		// "ghcr.io/devcontainers-contrib/features/ts-node": "latest"
+		// "ghcr.io/lukewiwa/features/shellcheck": {},
+		// "ghcr.io/oleksis/devcontainer-features/python-launcher": "latest"
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
@@ -77,7 +79,7 @@
 				"visualstudioexptteam.vscodeintellicode"
 			],
 			"settings": {
-				"python.defaultInterpreterPath": "/code/.venv/bin/python"
+				// "python.defaultInterpreterPath": "/code/.venv/bin/python"
 			}
 		}
 	}
