@@ -29,7 +29,7 @@ services:
       # This will make subsequent `npm install` runs faster.
       - type: volume
         source: npm-cache
-        target: /home/${APP_USER:-app}/.npm
+        target: /home/${APP_USER:-vscode}/.npm
 
     depends_on:
       - postgres-db
