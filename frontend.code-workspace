@@ -1,32 +1,30 @@
+// note: It would be preferable if these were in the `.vscode` directory, but VS Code
+// 1) does not automatically recognize them when opening in a container, and
+// 2) gives scary warnings when opening in a container about an unshared root directory.
 {
-	// Use IntelliSense to learn about possible attributes.
-	// Hover to view descriptions of existing attributes.
-	// For more information, visit: https://code.visualstudio.com/docs/getstarted/settings
-	"folders": [
-		{
-			"name": "fullstack-demo",
-			"path": "."
-		},
-		{
-			"name": "Frontend",
-			"path": "./frontend"
-		}
-	],
-	"extensions": {},
-	"settings": {
-		"files.exclude": {
-			"**/.DS_Store": true,
-			"**/backend": true,
-			"**/frontend": true
-		}
-	},
-	"launch": {
-		"version": "0.2.0",
-		"configurations": [],
-		"compounds": []
-	},
-	"tasks": {
-		"version": "2.0.0",
-		"tasks": []
-	}
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  "folders": [
+    {
+      "name": "fullstack-demo",
+      "path": "."
+    }
+  ],
+  "extensions": {},
+  "settings": {
+    "files.exclude": {
+      "**/.DS_Store": true,
+      "**/.git": false, // Show the .git folder in the explorer.
+      "/backend": true
+    }
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [],
+    "compounds": []
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": []
+  }
 }

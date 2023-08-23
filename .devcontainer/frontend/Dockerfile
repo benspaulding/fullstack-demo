@@ -1,4 +1,6 @@
+# note: This Dockerfile can target both production and development environments.
 ARG NODE_IMG="node:18-bullseye"
+ARG UNAME="${UNAME:-app}"
 
 ### Node Base Image
 FROM ${NODE_IMG} as base
@@ -22,8 +24,8 @@ ENV PATH="${NODE_DIR}/.bin:${PATH}"
 
 USER root
 
-RUN groupadd --gid 1024 app \
-  && useradd --uid 1024 --gid app --shell /bin/bash --create-home app
+RUN groupadd --gid 1024 "${UNAME}" \
+  && useradd --uid 1024 --gid "${UNAME}"  --shell /bin/bash --create-home "${UNAME}"
 
 RUN mkdir "${REPO_DIR}" && chown -R 1024:1024 "${REPO_DIR}"
 
@@ -41,7 +43,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   tzdata \
   && rm -rf /var/lib/apt/lists/*
 
-USER app
+USER "${UNAME}"
 WORKDIR "${REPO_DIR}"
 
 # ENTRYPOINT [ "docker-entrypoint.sh" ]
@@ -64,7 +66,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   git \
   && rm -rf /var/lib/apt/lists/*
 
-USER app
+USER "${UNAME}"
 WORKDIR "${REPO_DIR}"
 
 COPY --chown=1024:1024 "frontend/package*.json" "frontend/"
@@ -82,7 +84,7 @@ LABEL com.ourtilt.step="built"
 
 SHELL [ "/bin/bash", "+o", "errexit", "+o", "nounset", "+o", "pipefail", "-c" ]
 
-USER app
+USER "${UNAME}"
 WORKDIR "${REPO_DIR}/frontend"
 
 COPY --chown=1024:1024 ./frontend "${REPO_DIR}/frontend/"
@@ -101,6 +103,7 @@ SHELL [ "/bin/bash", "+o", "errexit", "+o", "nounset", "+o", "pipefail", "-c" ]
 
 USER root
 
+# todo: These extra dev packages should be reviewed and streamlined.
 RUN apt-get update && apt-get install -y --no-install-recommends \
   exa \
   exuberant-ctags \
@@ -121,10 +124,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   zsh \
   && rm -rf /var/lib/apt/lists/*
 
-RUN usermod -aG sudo app \
-  && echo "app ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/app
+RUN usermod -aG sudo "${UNAME}"  \
+  && echo "${UNAME}  ALL=(ALL:ALL) NOPASSWD:ALL" > "/etc/sudoers.d/${UNAME}"
 
-USER app
+USER "${UNAME}"
 WORKDIR "${REPO_DIR}/frontend"
 
 COPY --chown=1024:1024 ./frontend "${REPO_DIR}/frontend/"

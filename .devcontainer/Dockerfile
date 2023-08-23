@@ -1,6 +1,9 @@
+# note: This Dockerfile is only meant for local development.
 ARG IMG="mcr.microsoft.com/devcontainers/python:1-3.11-bullseye"
-FROM ${IMG}
 
+FROM "${IMG}"
+
+# note: Use a safer, stricter shell than the default.
 SHELL [ "/bin/bash", "+o", "errexit", "+o", "nounset", "+o", "pipefail", "-c" ]
 
 # note: This is not a useful arg from the docker cli, but it is useful because
@@ -22,6 +25,7 @@ ENV POETRY_VIRTUALENVS_CREATE="false"
 ENV PYTHONDONTWRITEBYTECODE="1"
 ENV PYTHONUNBUFFERED="1"
 
+# todo: These extra dev packages should be reviewed and streamlined.
 RUN apt-get update && apt-get -y install --no-install-recommends \
   build-essential \
   ca-certificates \
@@ -50,6 +54,7 @@ RUN --mount=type=cache,id=root,target=/root/.cache \
   honcho \
   pipx
 
+# note: Bake dependencies into the image because they should not change often.
 COPY "backend/pyproject.toml" "/tmp/poetry-tmp/"
 RUN --mount=type=cache,id=root,target=/root/.cache \
   poetry install \
@@ -58,12 +63,20 @@ RUN --mount=type=cache,id=root,target=/root/.cache \
   --no-interaction \
   --no-root
 
-COPY "backend/" "${REPO_DIR}/backend/"
-RUN --mount=type=cache,id=root,target=/root/.cache \
-  poetry install \
-  --directory "${REPO_DIR}/backend" \
-  --no-interaction \
-  --only-root
+# thought: Install is handled devcontainer.json:postStartCommand, but doing it
+# here could be handy for when running via docker/compose directly.
+# COPY "backend/" "${REPO_DIR}/backend/"
+# RUN --mount=type=cache,id=root,target=/root/.cache \
+#   poetry install \
+#   --directory "${REPO_DIR}/backend" \
+#   --no-interaction \
+#   --only-root
 
+# note: The user `vscode` is setup by the microsoft devcontainer image.
 USER vscode
 WORKDIR "${REPO_DIR}"
+
+# note: If a directory does not exist when a volume is mounted there it will be
+# owned by `root`. To avoid permission issues we create them here so they are
+# owned by `vscode` instead.
+RUN mkdir -p "${REPO_DIR}/frontend/node_modules"

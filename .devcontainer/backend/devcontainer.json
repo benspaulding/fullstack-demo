@@ -15,6 +15,8 @@
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // This can be used to network with other containers or the host.
+  // note: These are necessary because the compose service ports mapping does
+  // not work in some places, such as Codespaces.
   "forwardPorts": [
     3000, // frontend
     5555, // flower
@@ -23,6 +25,8 @@
     6379, // redis
     8000 // backend
   ],
+
+  // note: This mapping is not necessary, but labeling the ports is helpful.
   "portsAttributes": {
     "3000": {
       "label": "next.js",
@@ -71,7 +75,7 @@
         "timonwong.shellcheck"
       ],
       "settings": {
-        "python.defaultInterpreterPath": "/code/.venv/bin/python"
+        "python.defaultInterpreterPath": "/venv/bin/python"
       }
     }
   }

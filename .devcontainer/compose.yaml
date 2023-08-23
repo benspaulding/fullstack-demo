@@ -1,4 +1,5 @@
 ---
+# note: This Compose file is only meant for local development.
 version: "3.9"
 name: fullstack-demo
 include:
@@ -9,33 +10,44 @@ services:
     build:
       context: ..
       dockerfile: .devcontainer/Dockerfile
+
     env_file:
       - ../.env
+
     volumes:
-    - type: bind
-      source: ..
-      target: ${REPO_DIR:-/code}
+      - type: bind
+        source: ..
+        target: ${REPO_DIR:-/code}
+
+      # This will make subsequent `npm install` runs faster.
+      - type: volume
+        source: npm-cache
+        target: /home/${UNAME:-app}/.npm
+
+      # note: This is an anonymous volume. We want to mount a volume here to keep
+      # host and container `node_modules` separate, but Compose does not delete
+      # named volumes when stopping services. (And we want it deleted so changes
+      # don't hang around and rebuilds give us what we expect.)
+      - type: volume
+        target: ${REPO_DIR:-/code}/frontend/node_modules
+
     depends_on:
       - postgres-db
       - redis-db
+
     command:
       - sleep
       - infinity
 
     ports:
-      # Add "forwardPorts": ["8000"] to **devcontainer.json** to forward Django locally.
-      # (Adding the "ports" property to this file will not forward from a Codespace.)
-      - published: ${DJANGO_PORT:-8000}
-        target: 8000
-      # Add "forwardPorts": ["5555"] to **devcontainer.json** to forward Flower locally.
-      # (Adding the "ports" property to this file will not forward from a Codespace.)
-      - published: ${FLOWER_PORT:-5555}
-        target: 5555
-      # Add "forwardPorts": ["3000"] to **devcontainer.json** to forward next.js locally.
-      # (Adding the "ports" property to this file will not forward from a Codespace.)
       - published: ${NEXT_PORT:-3000}
         target: 3000
-      # Add "forwardPorts": ["6006"] to **devcontainer.json** to forward storybook locally.
-      # (Adding the "ports" property to this file will not forward from a Codespace.)
+      - published: ${FLOWER_PORT:-5555}
+        target: 5555
       - published: ${STORYBOOK_PORT:-6006}
         target: 6006
+      - published: ${DJANGO_PORT:-8000}
+        target: 8000
+
+volumes:
+  npm-cache:

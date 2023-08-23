@@ -3,5 +3,15 @@
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://code.visualstudio.com/docs/editor/tasks
   "version": "2.0.0",
-  "tasks": []
+  "tasks": [
+    {
+      "label": "honcho start",
+      "detail": "Run development Procfile processes",
+      "type": "process",
+      "command": ["honcho"],
+      "args": ["-d", "${workspaceFolder}/.devcontainer", "start"],
+      "echoCommand": true,
+      "problemMatcher": []
+    }
+  ]
 }

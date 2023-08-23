@@ -1,18 +1,23 @@
+# note: This Dockerfile can target both production and development environments.
 ARG PYTHON_IMG="python:3.11-bullseye"
+ARG UNAME="${UNAME:-app}"
 
 ### Python Base Image
 FROM ${PYTHON_IMG} as base
 LABEL com.ourtilt.lang="python"
 LABEL com.ourtilt.stack="backend"
 LABEL com.ourtilt.step="base"
-LABEL devcontainer.metadata='[{ \
-  "remoteUser": "app", \
-  "containerUser": "app" \
-  "workspaceFolder": "/code" \
-  }]'
+# LABEL devcontainer.metadata='[{ \
+#   "remoteUser": "${UNAME}", \
+#   "containerUser": "${UNAME}" \
+#   "workspaceFolder": "${REPO_DIR}" \
+#   }]'
 
+# note: Use a safer, stricter shell than the default.
 SHELL [ "/bin/bash", "+o", "errexit", "+o", "nounset", "+o", "pipefail", "-c" ]
 
+# note: This is not a useful arg from the docker cli, but it is useful because
+# ARG act like ENV during build, but are not persisted in the final image.
 ARG DEBIAN_FRONTEND="noninteractive"
 
 ARG REPO_DIR
@@ -35,8 +40,9 @@ ENV POETRY_VIRTUALENVS_IN_PROJECT="false"
 
 USER root
 
-RUN groupadd --gid 1024 app \
-  && useradd --uid 1024 --gid app --shell /bin/bash --create-home app
+# https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
+RUN groupadd --gid 1024 "${UNAME}" \
+  && useradd --uid 1024 --gid "${UNAME}" --shell /bin/bash --create-home "${UNAME}"
 
 RUN mkdir "${REPO_DIR}" && chown -R 1024:1024 "${REPO_DIR}"
 RUN mkdir "${VENV_DIR}" && chown -R 1024:1024 "${VENV_DIR}"
@@ -55,7 +61,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   tzdata \
   && rm -rf /var/lib/apt/lists/*
 
-USER app
+USER "${UNAME}"
 WORKDIR "${REPO_DIR}"
 
 # ENTRYPOINT [ "docker-entrypoint.sh" ]
@@ -95,7 +101,7 @@ RUN --mount=type=cache,id=root,target=/root/.cache \
 
 RUN chown -R 1024:1024 "${VENV_DIR}"
 
-USER app
+USER "${UNAME}"
 WORKDIR "${REPO_DIR}"
 
 ARG PYPROJ_TOML="backend/pyproject.toml"
@@ -120,7 +126,7 @@ SHELL [ "/bin/bash", "+o", "errexit", "+o", "nounset", "+o", "pipefail", "-c" ]
 ARG PYTHONWARNINGS
 ENV PYTHONWARNINGS=${PYTHONWARNINGS:-"default"}
 
-USER app
+USER "${UNAME}"
 WORKDIR "${REPO_DIR}/backend"
 
 COPY --chown=1024:1024 ./backend "${REPO_DIR}/backend/"
@@ -147,6 +153,7 @@ SHELL [ "/bin/bash", "+o", "errexit", "+o", "nounset", "+o", "pipefail", "-c" ]
 
 USER root
 
+# todo: These extra dev packages should be reviewed and streamlined.
 RUN apt-get update && apt-get install -y --no-install-recommends \
   exa \
   exuberant-ctags \
@@ -167,10 +174,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   zsh \
   && rm -rf /var/lib/apt/lists/*
 
-RUN usermod -aG sudo app \
-  && echo "app ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/app
+RUN usermod -aG sudo "${UNAME}" \
+  && echo "${UNAME} ALL=(ALL:ALL) NOPASSWD:ALL" > "/etc/sudoers.d/${UNAME}"
 
-USER app
+USER "${UNAME}"
 WORKDIR "${REPO_DIR}/backend"
 
 COPY --chown=1024:1024 ./backend "${REPO_DIR}/backend/"
@@ -180,9 +187,10 @@ RUN --mount=type=cache,id=app,uid=1024,gid=1024,target=/home/app/.cache \
   --directory "${REPO_DIR}/backend" \
   --no-interaction
 
-# Create folders that will probably have mounted volumes; this will cause the mounted
-# volume to be owned by `app` instead of `root`.
-RUN mkdir /home/app/.cache /home/app/.vscode-server
+# note: If a directory does not exist when a volume is mounted there it will be
+# owned by `root`. To avoid permission issues we create them here so they are
+# owned by `$UNAME` instead.
+RUN mkdir "/home/${UNAME}/.cache" "/home/${UNAME}/.vscode-server"
 
 # ARG PRECOMMIT_CFG=".pre-commit-config.yaml"
 # COPY --chown=1024:1024 "${PRECOMMIT_CFG}" "${PRECOMMIT_CFG}"

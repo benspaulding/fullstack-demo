@@ -1,30 +1,26 @@
 ---
+# note: In theory this Compose file could be made to work in production & development.
 version: "3.9"
 name: fullstack-demo
 include:
   - path: compose.common.yaml
 
+# hint: If there are environment variables that *must* be set the below will make it so.
 # x-required:
 #   - "${REPO_DIR:?Path to repository root in the container}"
 
-x-code-mount:
-  &__code_mount
-  type: bind
-  source: ..
-  target: ${REPO_DIR:-/code}
-x-vscode-home:
-  &__vscode_home
-  type: volume
-  source: vscode-home-dir
-  target: /home/app/.vscode-server
-x-vscode-root:
-  &__vscode_root
-  type: volume
-  source: vscode-root-dir
-  target: /vscode
+x-dev-volumes: &__dev_volumes
+  - type: bind
+    source: ..
+    target: ${REPO_DIR:-/code}
+  - type: volume
+    source: vscode-home-dir
+    target: /home/${UNAME:-app}/.vscode-server
+  - type: volume
+    source: vscode-root-dir
+    target: /vscode
 
-x-django:
-  &__django_service
+x-django: &__django_service
   build:
     context: ..
     dockerfile: .devcontainer/backend/Dockerfile
@@ -32,10 +28,7 @@ x-django:
   env_file:
     - ../.env
     # - ../backend/.env
-  volumes:
-    - *__code_mount
-    - *__vscode_home
-    - *__vscode_root
+  volumes: *__dev_volumes
   depends_on:
     - postgres-db
     - redis-db
@@ -46,8 +39,7 @@ x-django:
   command:
     - --help
 
-x-celery:
-  &__celery_service
+x-celery: &__celery_service
   <<: *__django_service
   volumes_from:
     - django-dev
@@ -57,8 +49,7 @@ x-celery:
     - celery
     - --app=${CELERY_APP:-djproj.celery:app}
 
-x-next:
-  &__next_service
+x-next: &__next_service
   build:
     context: ..
     dockerfile: .devcontainer/frontend/Dockerfile
@@ -66,10 +57,7 @@ x-next:
   env_file:
     - ../.env
     # - ../frontend/.env
-  volumes:
-    - *__code_mount
-    - *__vscode_home
-    - *__vscode_root
+  volumes: *__dev_volumes
   depends_on:
     - django-dev
   entrypoint:
@@ -83,12 +71,6 @@ services:
     command:
       - runserver
       - "${DJANGO_HOST:-0.0.0.0}:${DJANGO_PORT:-8000}"
-
-    # # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
-    # network_mode: service:postgres-db
-
-    # Add "forwardPorts": ["8000"] to **devcontainer.json** to forward Django locally.
-    # (Adding the "ports" property to this file will not forward from a Codespace.)
     ports:
       - published: ${DJANGO_PORT:-8000}
         target: 8000
@@ -113,9 +95,6 @@ services:
       - flower
       - --address=${FLOWER_HOST:-0.0.0.0}
       - --port=${FLOWER_PORT:-5555}
-
-    # Add "forwardPorts": ["5555"] to **devcontainer.json** to forward Flower locally.
-    # (Adding the "ports" property to this file will not forward from a Codespace.)
     ports:
       - published: ${FLOWER_PORT:-5555}
         target: 5555
@@ -127,9 +106,6 @@ services:
       - dev
       - -H ${NEXT_HOST:-0.0.0.0}
       - -p ${NEXT_PORT:-3000}
-
-    # Add "forwardPorts": ["3000"] to **devcontainer.json** to forward next.js locally.
-    # (Adding the "ports" property to this file will not forward from a Codespace.)
     ports:
       - published: ${NEXT_PORT:-3000}
         target: 3000
@@ -143,9 +119,6 @@ services:
       - -p ${STORYBOOK_PORT:-6006}
     volumes_from:
       - next-dev
-
-    # Add "forwardPorts": ["6006"] to **devcontainer.json** to forward next.js locally.
-    # (Adding the "ports" property to this file will not forward from a Codespace.)
     ports:
       - published: ${STORYBOOK_PORT:-6006}
         target: 6006
