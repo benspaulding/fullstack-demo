@@ -2,8 +2,6 @@
 // 1) does not automatically recognize them when opening in a container, and
 // 2) gives scary warnings when opening in a container about an unshared root directory.
 {
-  // Use IntelliSense to learn about possible attributes.
-  // Hover to view descriptions of existing attributes.
   "folders": [
     {
       "name": "fullstack-demo",
@@ -24,6 +22,34 @@
   },
   "tasks": {
     "version": "2.0.0",
-    "tasks": []
+    "tasks": [
+      {
+        "label": "backend procs",
+        "detail": "Run backend development processes",
+        "type": "process",
+        "command": ["honcho"],
+        "args": ["-d", "${workspaceFolder}/.devcontainer", "start", "be"],
+        "echoCommand": true,
+        "problemMatcher": []
+      },
+      {
+        "label": "celery procs",
+        "detail": "Run celery development processes",
+        "type": "process",
+        "command": ["honcho"],
+        "args": ["-d", "${workspaceFolder}/.devcontainer", "start", "cw", "cb", "cf"],
+        "echoCommand": true,
+        "problemMatcher": []
+      },
+      {
+        "label": "frontend procs",
+        "detail": "Run frontend development processes",
+        "type": "process",
+        "command": ["honcho"],
+        "args": ["-d", "${workspaceFolder}/.devcontainer", "start", "fe", "sb"],
+        "echoCommand": true,
+        "problemMatcher": []
+      }
+    ]
   }
 }

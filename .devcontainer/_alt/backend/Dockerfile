@@ -1,17 +1,11 @@
-# note: This Dockerfile can target both production and development environments.
+# note: This Dockerfile could target both production and development environments.
 ARG PYTHON_IMG="python:3.11-bullseye"
-ARG UNAME="${UNAME:-app}"
 
 ### Python Base Image
 FROM ${PYTHON_IMG} as base
 LABEL com.ourtilt.lang="python"
 LABEL com.ourtilt.stack="backend"
 LABEL com.ourtilt.step="base"
-# LABEL devcontainer.metadata='[{ \
-#   "remoteUser": "${UNAME}", \
-#   "containerUser": "${UNAME}" \
-#   "workspaceFolder": "${REPO_DIR}" \
-#   }]'
 
 # note: Use a safer, stricter shell than the default.
 SHELL [ "/bin/bash", "+o", "errexit", "+o", "nounset", "+o", "pipefail", "-c" ]
@@ -19,6 +13,9 @@ SHELL [ "/bin/bash", "+o", "errexit", "+o", "nounset", "+o", "pipefail", "-c" ]
 # note: This is not a useful arg from the docker cli, but it is useful because
 # ARG act like ENV during build, but are not persisted in the final image.
 ARG DEBIAN_FRONTEND="noninteractive"
+
+ARG APP_USER
+ENV APP_USER="${APP_USER:-app}"
 
 ARG REPO_DIR
 ENV REPO_DIR="${REPO_DIR:-/code}"
@@ -41,8 +38,8 @@ ENV POETRY_VIRTUALENVS_IN_PROJECT="false"
 USER root
 
 # https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#user
-RUN groupadd --gid 1024 "${UNAME}" \
-  && useradd --uid 1024 --gid "${UNAME}" --shell /bin/bash --create-home "${UNAME}"
+RUN groupadd --gid 1024 "${APP_USER}" \
+  && useradd --uid 1024 --gid "${APP_USER}" --shell /bin/bash --create-home "${APP_USER}"
 
 RUN mkdir "${REPO_DIR}" && chown -R 1024:1024 "${REPO_DIR}"
 RUN mkdir "${VENV_DIR}" && chown -R 1024:1024 "${VENV_DIR}"
@@ -61,7 +58,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   tzdata \
   && rm -rf /var/lib/apt/lists/*
 
-USER "${UNAME}"
+USER "${APP_USER}"
 WORKDIR "${REPO_DIR}"
 
 # ENTRYPOINT [ "docker-entrypoint.sh" ]
@@ -101,7 +98,7 @@ RUN --mount=type=cache,id=root,target=/root/.cache \
 
 RUN chown -R 1024:1024 "${VENV_DIR}"
 
-USER "${UNAME}"
+USER "${APP_USER}"
 WORKDIR "${REPO_DIR}"
 
 ARG PYPROJ_TOML="backend/pyproject.toml"
@@ -126,7 +123,7 @@ SHELL [ "/bin/bash", "+o", "errexit", "+o", "nounset", "+o", "pipefail", "-c" ]
 ARG PYTHONWARNINGS
 ENV PYTHONWARNINGS=${PYTHONWARNINGS:-"default"}
 
-USER "${UNAME}"
+USER "${APP_USER}"
 WORKDIR "${REPO_DIR}/backend"
 
 COPY --chown=1024:1024 ./backend "${REPO_DIR}/backend/"
@@ -154,19 +151,17 @@ SHELL [ "/bin/bash", "+o", "errexit", "+o", "nounset", "+o", "pipefail", "-c" ]
 USER root
 
 # todo: These extra dev packages should be reviewed and streamlined.
+# question: Could we pull these from somewhere that would let devs customize them?
 RUN apt-get update && apt-get install -y --no-install-recommends \
   exa \
   exuberant-ctags \
   fd-find \
-  fish \
   fzf \
   htop \
   jq \
   neovim \
   rsync \
-  screen \
   shellcheck \
-  sudo \
   telnet \
   tmux \
   tree \
@@ -174,10 +169,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   zsh \
   && rm -rf /var/lib/apt/lists/*
 
-RUN usermod -aG sudo "${UNAME}" \
-  && echo "${UNAME} ALL=(ALL:ALL) NOPASSWD:ALL" > "/etc/sudoers.d/${UNAME}"
+RUN usermod -aG sudo "${APP_USER}" \
+  && echo "${APP_USER} ALL=(ALL:ALL) NOPASSWD:ALL" > "/etc/sudoers.d/${APP_USER}"
 
-USER "${UNAME}"
+USER "${APP_USER}"
 WORKDIR "${REPO_DIR}/backend"
 
 COPY --chown=1024:1024 ./backend "${REPO_DIR}/backend/"
@@ -189,8 +184,8 @@ RUN --mount=type=cache,id=app,uid=1024,gid=1024,target=/home/app/.cache \
 
 # note: If a directory does not exist when a volume is mounted there it will be
 # owned by `root`. To avoid permission issues we create them here so they are
-# owned by `$UNAME` instead.
-RUN mkdir "/home/${UNAME}/.cache" "/home/${UNAME}/.vscode-server"
+# owned by `$APP_USER` instead.
+RUN mkdir "/home/${APP_USER}/.cache" "/home/${APP_USER}/.vscode-server"
 
 # ARG PRECOMMIT_CFG=".pre-commit-config.yaml"
 # COPY --chown=1024:1024 "${PRECOMMIT_CFG}" "${PRECOMMIT_CFG}"

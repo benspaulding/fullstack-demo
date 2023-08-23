@@ -1,15 +1,17 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/postgres
 {
-  "name": "Fullstack Demo [Frontend]",
+  "name": "Fullstack Demo [Backend]",
   "dockerComposeFile": ["../compose.discrete.yaml", "compose.yaml"],
-  "service": "next-dev",
-  "workspaceFolder": "/code/frontend",
+  "service": "django-dev",
+  "workspaceFolder": "/code/backend",
 
-  //
+  // todo: Move these devcontainer features into the Dockerfile dev target.
+  // Doing so would make using Docker/Compose more convenient.
   "features": {
     "ghcr.io/devcontainers/features/github-cli": {},
-    "ghcr.io/guiyomh/features/just": {}
+    "ghcr.io/guiyomh/features/just": {},
+    "ghcr.io/oleksis/devcontainer-features/python-launcher": {}
   },
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
@@ -61,12 +63,21 @@
         "editorconfig.editorconfig",
         "esbenp.prettier-vscode",
         "foxundermoon.shell-format",
+        "kevinrose.vsc-python-indent",
         "mikestead.dotenv",
+        "ms-python.black-formatter",
+        "ms-python.debugpy",
+        "ms-python.flake8",
+        "ms-python.isort",
+        "ms-python.mypy-type-checker",
+        "ms-python.python",
         "skellock.just",
         "tamasfe.even-better-toml",
         "timonwong.shellcheck"
       ],
-      "settings": {}
+      "settings": {
+        "python.defaultInterpreterPath": "/venv/bin/python"
+      }
     }
   }
 }

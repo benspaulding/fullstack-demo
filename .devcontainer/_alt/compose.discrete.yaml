@@ -15,7 +15,7 @@ x-dev-volumes: &__dev_volumes
     target: ${REPO_DIR:-/code}
   - type: volume
     source: vscode-home-dir
-    target: /home/${UNAME:-app}/.vscode-server
+    target: /home/${APP_USER:-app}/.vscode-server
   - type: volume
     source: vscode-root-dir
     target: /vscode

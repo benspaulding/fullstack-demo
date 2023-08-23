@@ -2,20 +2,24 @@
 // 1) does not automatically recognize them when opening in a container, and
 // 2) gives scary warnings when opening in a container about an unshared root directory.
 {
-  // Use IntelliSense to learn about possible attributes.
-  // Hover to view descriptions of existing attributes.
   "folders": [
     {
       "name": "fullstack-demo",
       "path": "."
     }
+    // If the repo was more complex we could define the frontend folders individually.
+    // {
+    //   "name": "frontend",
+    //   "path": "./frontend"
+    // }
   ],
   "extensions": {},
   "settings": {
     "files.exclude": {
       "**/.DS_Store": true,
       "**/.git": false, // Show the .git folder in the explorer.
-      "/backend": true
+      "backend/": true // Hide backend 'cause this workspace is all about the frontend.
+      // "frontend/": true, // Hide frontend at the root; see folders mapping above.
     }
   },
   "launch": {
@@ -25,6 +29,15 @@
   },
   "tasks": {
     "version": "2.0.0",
-    "tasks": []
+    "tasks": [
+      {
+        "label": "backend procs",
+        "detail": "Run backend development processes",
+        "type": "process",
+        "command": ["honcho"],
+        "args": ["-d", "${workspaceFolder}/.devcontainer", "start", "be", "cw", "cb"],
+        "echoCommand": true
+      }
+    ]
   }
 }

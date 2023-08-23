@@ -19,17 +19,17 @@ services:
         source: ..
         target: ${REPO_DIR:-/code}
 
-      # This will make subsequent `npm install` runs faster.
-      - type: volume
-        source: npm-cache
-        target: /home/${UNAME:-app}/.npm
-
       # note: This is an anonymous volume. We want to mount a volume here to keep
       # host and container `node_modules` separate, but Compose does not delete
       # named volumes when stopping services. (And we want it deleted so changes
       # don't hang around and rebuilds give us what we expect.)
       - type: volume
         target: ${REPO_DIR:-/code}/frontend/node_modules
+
+      # This will make subsequent `npm install` runs faster.
+      - type: volume
+        source: npm-cache
+        target: /home/${APP_USER:-app}/.npm
 
     depends_on:
       - postgres-db

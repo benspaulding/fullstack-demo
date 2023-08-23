@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+
+here=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+paths=(backend frontend compose.discrete.yaml)
+
+function flip() {
+  ret=0
+
+  for path in "${paths[@]}"; do
+    target="$here/../$path"
+
+    if [ ! -e "$target" ]; then
+      cmd=(ln -s "$here/$path" "$here/..")
+      echo "=> ${cmd[*]}" >&2
+      "${cmd[@]}"
+    elif [ ! -L "$target" ]; then
+      echo "!! Error: Not creating link at '$(realpath "$target")'" >&2
+      echo "-> That path already exists." >&2
+      ret=1
+    fi
+  done
+
+  return $ret
+}
+
+function flop() {
+  ret=0
+
+  for path in "${paths[@]}"; do
+    target="$here/../$path"
+
+    if [ -e "$target" ] && [ -L "$target" ]; then
+      cmd=(rm "$(grealpath -s "$target")")
+      echo "=> ${cmd[*]}" >&2
+      "${cmd[@]}"
+    elif [ -e "$target" ]; then
+      echo "!! Error: Not removing '$(realpath "$target")'" >&2
+      echo "-> That path is not a symlink." >&2
+      ret=1
+    fi
+  done
+
+  return $ret
+}
+
+function main() {
+  if [ ! "$@" ]; then
+    echo "Flipping ..." >&2
+    flip
+  elif [ "$*" = "flop" ]; then
+    echo "Flopping ..." >&2
+    flop
+  else
+    echo "!! Error: unexpected arguments '$*'" >&2
+    echo "-> Valid arguments are either nothing or 'flop'." >&2
+    return 2
+  fi
+}
+
+main "$@"

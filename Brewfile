@@ -1,4 +1,5 @@
 # Homebrew packages
+brew "coreutils"
 brew "just"
 brew "mas"
 brew "nodenv"

@@ -1,6 +1,5 @@
-# note: This Dockerfile can target both production and development environments.
+# note: This Dockerfile could target both production and development environments.
 ARG NODE_IMG="node:18-bullseye"
-ARG UNAME="${UNAME:-app}"
 
 ### Node Base Image
 FROM ${NODE_IMG} as base
@@ -11,6 +10,9 @@ LABEL com.ourtilt.step="base"
 SHELL [ "/bin/bash", "+o", "errexit", "+o", "nounset", "+o", "pipefail", "-c" ]
 
 ARG DEBIAN_FRONTEND="noninteractive"
+
+ARG APP_USER
+ENV APP_USER="${APP_USER:-app}"
 
 ARG REPO_DIR
 ENV REPO_DIR="${REPO_DIR:-/code}"
@@ -24,8 +26,8 @@ ENV PATH="${NODE_DIR}/.bin:${PATH}"
 
 USER root
 
-RUN groupadd --gid 1024 "${UNAME}" \
-  && useradd --uid 1024 --gid "${UNAME}"  --shell /bin/bash --create-home "${UNAME}"
+RUN groupadd --gid 1024 "${APP_USER}" \
+  && useradd --uid 1024 --gid "${APP_USER}"  --shell /bin/bash --create-home "${APP_USER}"
 
 RUN mkdir "${REPO_DIR}" && chown -R 1024:1024 "${REPO_DIR}"
 
@@ -43,7 +45,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   tzdata \
   && rm -rf /var/lib/apt/lists/*
 
-USER "${UNAME}"
+USER "${APP_USER}"
 WORKDIR "${REPO_DIR}"
 
 # ENTRYPOINT [ "docker-entrypoint.sh" ]
@@ -66,7 +68,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   git \
   && rm -rf /var/lib/apt/lists/*
 
-USER "${UNAME}"
+USER "${APP_USER}"
 WORKDIR "${REPO_DIR}"
 
 COPY --chown=1024:1024 "frontend/package*.json" "frontend/"
@@ -84,7 +86,7 @@ LABEL com.ourtilt.step="built"
 
 SHELL [ "/bin/bash", "+o", "errexit", "+o", "nounset", "+o", "pipefail", "-c" ]
 
-USER "${UNAME}"
+USER "${APP_USER}"
 WORKDIR "${REPO_DIR}/frontend"
 
 COPY --chown=1024:1024 ./frontend "${REPO_DIR}/frontend/"
@@ -104,19 +106,17 @@ SHELL [ "/bin/bash", "+o", "errexit", "+o", "nounset", "+o", "pipefail", "-c" ]
 USER root
 
 # todo: These extra dev packages should be reviewed and streamlined.
+# question: Could we pull these from somewhere that would let devs customize them?
 RUN apt-get update && apt-get install -y --no-install-recommends \
   exa \
   exuberant-ctags \
   fd-find \
-  fish \
   fzf \
   htop \
   jq \
   neovim \
   rsync \
-  screen \
   shellcheck \
-  sudo \
   telnet \
   tmux \
   tree \
@@ -124,10 +124,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
   zsh \
   && rm -rf /var/lib/apt/lists/*
 
-RUN usermod -aG sudo "${UNAME}"  \
-  && echo "${UNAME}  ALL=(ALL:ALL) NOPASSWD:ALL" > "/etc/sudoers.d/${UNAME}"
+RUN usermod -aG sudo "${APP_USER}"  \
+  && echo "${APP_USER}  ALL=(ALL:ALL) NOPASSWD:ALL" > "/etc/sudoers.d/${APP_USER}"
 
-USER "${UNAME}"
+USER "${APP_USER}"
 WORKDIR "${REPO_DIR}/frontend"
 
 COPY --chown=1024:1024 ./frontend "${REPO_DIR}/frontend/"

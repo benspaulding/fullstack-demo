@@ -7,13 +7,15 @@
   "workspaceFolder": "/code",
   "remoteUser": "vscode",
 
-  //
+  // todo: Move these devcontainer features into the Dockerfile.
+  // Doing so would make using Docker/Compose more convenient.
   "features": {
     "ghcr.io/devcontainers/features/github-cli": {},
     "ghcr.io/devcontainers/features/node": "lts",
     "ghcr.io/guiyomh/features/just": {},
     "ghcr.io/oleksis/devcontainer-features/python-launcher": {}
   },
+
   "postStartCommand": {
     "dev": "poetry -C backend install --no-interaction --only-root && npm install -g npm && npm --prefix frontend install"
   },

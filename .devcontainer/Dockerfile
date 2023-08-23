@@ -26,6 +26,7 @@ ENV PYTHONDONTWRITEBYTECODE="1"
 ENV PYTHONUNBUFFERED="1"
 
 # todo: These extra dev packages should be reviewed and streamlined.
+# question: Could we pull these from somewhere that would let devs customize them?
 RUN apt-get update && apt-get -y install --no-install-recommends \
   build-essential \
   ca-certificates \
