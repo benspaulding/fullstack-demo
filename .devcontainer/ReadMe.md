@@ -1,8 +1,5 @@
 # Example Fullstack Dev Container
 
-_**Note**: VS Code only looks one level deep in `.devcontainer` for configurations. Thus
-these are hidden **two** levels deep to keep them from cluttering the VS Code UI._
-
 It can be tedious setting up a fullstack develpoment environtment using Docker Compose /
 Dev Containers. The `devcontainer.json` in this directory (and its related Dockerfile,
 Profcile, and Compose files) gives an example of how it might work.
