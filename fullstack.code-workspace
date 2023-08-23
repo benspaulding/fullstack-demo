@@ -24,6 +24,17 @@
     "version": "2.0.0",
     "tasks": [
       {
+        // note: This task will not run unless the container was created using Dev
+        // Containers. Currently node/npm are not installed by the Dockerfile.
+        "label": "dev procs",
+        "detail": "Run all development processes",
+        "type": "process",
+        "command": ["honcho"],
+        "args": ["-d", "${workspaceFolder}/.devcontainer", "start"],
+        "echoCommand": true,
+        "problemMatcher": []
+      },
+      {
         "label": "backend procs",
         "detail": "Run backend development processes",
         "type": "process",
@@ -42,6 +53,8 @@
         "problemMatcher": []
       },
       {
+        // note: This task will not run unless the container was created using Dev
+        // Containers. Currently node/npm are not installed by the Dockerfile.
         "label": "frontend procs",
         "detail": "Run frontend development processes",
         "type": "process",

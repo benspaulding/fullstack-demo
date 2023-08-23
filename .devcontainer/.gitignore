@@ -1,3 +1,4 @@
+# Ignore these symlinks that will be made to `_alt` paths using the `_alt/flip` script.
 /backend
 /frontend
 /compose.discrete.yaml

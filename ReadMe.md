@@ -27,9 +27,12 @@ just install
 just open
 ```
 
+You can work in a container with VS Code by using the Dev Containers extension, or by
+spinning up the stack directly with either the `just up` recipe or directly with
+`docker compose`, then getting a shell to a container, or attaching VS Code to the
+container using the Docker extension.
+
 ## TODO
 
 - setup pre-commit
 - setup static file handling
-- setup frontend profile
-- setup backend profile

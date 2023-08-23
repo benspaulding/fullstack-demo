@@ -26,7 +26,7 @@ f := "false"
 export HOMEBREW_BUNDLE_NO_LOCK := "1"
 export HOMEBREW_NO_INSECURE_REDIRECT := "1"
 
-export COMPOSE_FILE := env_var_or_default("COMPOSE_FILE", ".devcontainer/compose.discrete.yaml")
+export COMPOSE_FILE := env_var_or_default("COMPOSE_FILE", ".devcontainer/compose.yaml")
 export COMPOSE_PROJECT_NAME := env_var_or_default("COMPOSE_PROJECT_NAME", "fullstack-demo")
 
 
@@ -102,18 +102,3 @@ dn *services:
 	else
 		docker compose down --remove-orphans {{ services }}
 	fi
-
-	# todo: Only run this if `--volumes` was not passed to `docker compose down`
-	"{{ SELF }}" rm-data
-
-# remove named volumes that should not persist
-rm-data +volumes="node-modules venv-dir":
-	#!/usr/bin/env bash
-	set -euo pipefail
-
-	# todo: Use `{{ volumes }}` arg in `jq` filter.
-	# todo: Remove all project volumes if `volumes` is `--all`
-	# todo: Do not error if volume(s) do not exist.
-	volume_names=$(docker compose -f .devcontainer/compose.yaml config --format json | \
-		jq -r '.volumes | [."node-modules", ."venv-dir"][].name')
-	docker volume rm $volume_names
